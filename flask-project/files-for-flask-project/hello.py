@@ -1,10 +1,11 @@
 from flask import Flask
+from flask import render_template
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return """<h2>Hello Web World!</h2>
+    return f""" {render_template('index.html')}
     <p><a href="http://127.0.0.1:5000/songs">Song List</a></p>
     <p><a href="http://127.0.0.1:5000/about">About Me</a></p>
     """
@@ -15,17 +16,17 @@ def about():
 
 @app.route('/songs')
 def songs():
-    return """<h2>A list of my favorite songs</h2>
-    <li><em>You're the Voice</em> by <strong>John Farnham</strong></li>
-    <li><em>Tubular Bells</em> by <strong>Mike Oldfield</strong></li>
-    <li><em>Black Market</em> by <strong>Weather Report</strong></li>
-    <li><em>A Whiter Shade of Pale</em> by <strong>Procol Harum</strong></li>
-    """
+    songs = {"You're the Voice": "John Farnham", "Tubular Bells": "Mike Oldfield", "Black Market": "Weather Report", "A Whiter Shade of Pale": "Procol Harum"}
+    return render_template('songs.html', favorite_songs=songs)
 
 @app.route('/user/<username>')
 def user(username):
-    return f'Hello {username}'
+    return render_template('user.html', username=username)
 
 @app.route('/number/<number>')
 def square(number):
     return f'Your number squared is: {int(number) * int(number)}'
+
+@app.route('/derived')
+def derived():
+    return render_template('derived.html')
