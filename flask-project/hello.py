@@ -21,3 +21,11 @@ def songs():
     <li><em>Black Market</em> by <strong>Weather Report</strong></li>
     <li><em>A Whiter Shade of Pale</em> by <strong>Procol Harum</strong></li>
     """
+
+@app.route('/user/<username>')
+def user(username):
+    return f'Hello {username}'
+
+@app.route('/number/<number>')
+def square(number):
+    return f'Your number squared is: {int(number) * int(number)}'
