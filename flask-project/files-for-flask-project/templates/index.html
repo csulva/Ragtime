@@ -1,1 +1,11 @@
-<h1>Hello Web World!</h1>
+{% extends "base.html" %}
+
+
+{% block navbar %}
+    {{super()}}
+{% endblock navbar%}
+
+
+{% block content %}
+    <h2>Hello Web World!</h2>
+{% endblock content %}
