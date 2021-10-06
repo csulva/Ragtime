@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ super() }} {{error_title}} {% endblock title %}
+
+{% block page_content %}
+{{super()}}
+<h1>Whoops</h1>
+<p>{{ error_msg }}</p>
+{% endblock %}
