@@ -1,5 +1,5 @@
 /env
 /__pycache__
-/flask-labs
+../../flask-labs
 .__pycache__
 .pyc
