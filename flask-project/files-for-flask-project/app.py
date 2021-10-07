@@ -1,13 +1,27 @@
 from flask import Flask
-from flask import render_template
+from flask import render_template, redirect, url_for, session, flash
 from flask_bootstrap import Bootstrap
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
+
+class NameForm(FlaskForm):
+    name = StringField("What is your name?", validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
+app.config['SECRET_KEY'] = "keep it secret, keep it safe"
 
-@app.route('/')
+@app.route('/', methods=["GET", "POST"])
 def index():
-    return f""" {render_template('index.html')}
+    form = NameForm()
+    if form.validate_on_submit():
+        session['name'] = form.name.data
+        flash('Great! We hope you enjoy the community')
+        return redirect(url_for('index'))
+    return f""" {render_template('index.html', form=form, name=session.get('name'))}
     <p><a href="http://127.0.0.1:5000/songs">Song List</a></p>
     <p><a href="http://127.0.0.1:5000/about">About Me</a></p>
     """

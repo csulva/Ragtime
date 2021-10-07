@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
 
 {% block navbar %}
@@ -7,5 +8,9 @@
 
 
 {% block content %}
-    <h2>Hello Web World!</h2>
+<h1>Welcome to Ragtime, {% if name %}{{name}}{% else %}Anonymous{% endif %}!</h1>
+<p>Enjoy your stay.</p>
+
+    {{ wtf.quick_form(form) }}
+
 {% endblock content %}
