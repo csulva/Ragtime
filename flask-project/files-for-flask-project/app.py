@@ -2,11 +2,15 @@ from flask import Flask
 from flask import render_template, redirect, url_for, session, flash
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, DateField
 from wtforms.validators import DataRequired
 
 class NameForm(FlaskForm):
     name = StringField("What is your name?", validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+class DateForm(FlaskForm):
+    date = DateField('What is your birthday (month, day)', format='%m-%d', validators=[DataRequired()])
     submit = SubmitField("Submit")
 
 
@@ -25,6 +29,16 @@ def index():
     <p><a href="http://127.0.0.1:5000/songs">Song List</a></p>
     <p><a href="http://127.0.0.1:5000/about">About Me</a></p>
     """
+
+@app.route('/zodiac', methods=["GET", "POST"])
+def zodiac():
+    form = DateForm()
+    zodiac_signs = ['Aquarius', 'Pisces', 'Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn']
+    if form.validate_on_submit():
+        session['date'] = form.date.data
+        flash(f'Your zodiac sign is... ')
+        return redirect(url_for('zodiac'))
+    return render_template('zodiac.html', form=form, date=session.get('date'), zodiac_signs=zodiac_signs)
 
 @app.route('/about')
 def about():

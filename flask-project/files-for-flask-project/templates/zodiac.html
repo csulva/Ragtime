@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+
+{% block content %}
+<div class="container">
+    <p>{% if date %}{{date}}{% else %}Enter your date{% endif %}</p>
+{{wtf.quick_form(form)}}
+
+<div class="container">
+    {% for msg in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            <button type="button" class="done" data-dismiss="alert">&times;</button>
+            {% if 'Jan' in date and '20' in date %}
+                {{ msg + zodiac_signs[0] }}
+            {% else %}
+                {{msg}}
+            {% endif %}
+        </div>
+    {% endfor %}
+    {% block page_content %}
+    {% endblock page_content %}
+</div>
+
+
+{% endblock content %}
