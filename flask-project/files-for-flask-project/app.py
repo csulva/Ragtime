@@ -4,6 +4,8 @@ from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField
 from wtforms.validators import DataRequired
+import os
+from flask_sqlalchemy import SQLAlchemy
 
 class NameForm(FlaskForm):
     name = StringField("What is your name?", validators=[DataRequired()])
@@ -13,10 +15,40 @@ class DateForm(FlaskForm):
     date = DateField('What is your birthday (month, day)', format='%m-%d', validators=[DataRequired()])
     submit = SubmitField("Submit")
 
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 app.config['SECRET_KEY'] = "keep it secret, keep it safe"
+app.config['SQLALCHEMY_DATABASE_URI'] = \
+    f'sqlite:///{os.path.join(basedir, "data-dev.sqlite")}'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+class Role(db.Model):
+    __tablename__ = 'roles'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    users = db.relationship('User', backref='role', lazy='dynamic')
+
+    def __repr__(self):
+        return f'<Role: {self.name}>'
+
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), unique=True, index=True)
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+
+    def __repr__(self):
+        return f'<User: {self.username}>'
+
+
+@app.shell_context_processor
+def make_shell_context():
+    return dict(db=db, Role=Role, User=User)
+
 
 @app.route('/', methods=["GET", "POST"])
 def index():
