@@ -6,6 +6,7 @@ from wtforms import StringField, SubmitField, DateField
 from wtforms.validators import DataRequired
 import os
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 class NameForm(FlaskForm):
     name = StringField("What is your name?", validators=[DataRequired()])
@@ -19,12 +20,14 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
+
 app.config['SECRET_KEY'] = "keep it secret, keep it safe"
 app.config['SQLALCHEMY_DATABASE_URI'] = \
     f'sqlite:///{os.path.join(basedir, "data-dev.sqlite")}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db, render_as_batch=True)
 
 class Role(db.Model):
     __tablename__ = 'roles'
