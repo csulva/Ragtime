@@ -3,3 +3,7 @@
 ../../flask-labs
 .__pycache__
 .pyc
+.ini
+.sqlite
+__pycache__
+__pycache__/
