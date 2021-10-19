@@ -23,3 +23,4 @@ def make_shell_context():
 #     return render_template('zodiac.html', form=form, date=session.get('date'), zodiac_signs=zodiac_signs)
 
 
+app.run()
