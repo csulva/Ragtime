@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import render_template, redirect, url_for, session, flash,
+from flask import render_template, redirect, url_for, session, flash
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from config import config
