@@ -17,3 +17,4 @@ def new_app():
     db.session.remove()
     db.drop_all()
     context.pop()
+
