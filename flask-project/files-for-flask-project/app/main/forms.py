@@ -9,3 +9,4 @@ class NameForm(FlaskForm):
 class DateForm(FlaskForm):
     date = DateField('What is your birthday (month, day)', format='%m-%d', validators=[DataRequired()])
     submit = SubmitField("Submit")
+

@@ -9,7 +9,13 @@
 
 {% block content %}
 {{super()}}
-<h1>Welcome to Ragtime, {% if name %}{{name}}{% else %}Anonymous{% endif %}!</h1>
+<h1>Welcome to Ragtime,
+    {% if current_user.is_authenticated %}
+        {{ current_user.username }}
+    {%- else %}
+        Anonymous
+    {%- endif %}!
+</h1>
 <div class="page-header">
     {% if not known %}
     <p>Mucho gusto! (Nice to meet you!)</p>

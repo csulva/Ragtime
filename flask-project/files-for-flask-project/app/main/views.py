@@ -1,4 +1,5 @@
 from flask import session, render_template, url_for, flash, redirect
+from flask_login import login_required
 from . import main
 from .forms import NameForm
 from .. import db
