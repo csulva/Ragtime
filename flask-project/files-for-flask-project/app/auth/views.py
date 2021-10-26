@@ -6,6 +6,7 @@ from app import login_manager
 from flask_login import login_required, login_user, current_user
 from .forms import LoginForm, RegistrationForm
 from app.models import User
+from .. import db
 
 @auth.route('/login', methods=["GET", "POST"])
 def login():
@@ -30,7 +31,21 @@ def logout():
     flash('You have been logged out successfully.')
     return redirect(url_for('main.index'))
 
-@auth.route('/register')
+@auth.route('/register', methods=["GET", "POST"])
 def register():
     form = RegistrationForm()
+    if form.validate_on_submit():
+        #Do I need this?
+        username_entered = form.username.data
+        email_entered = form.email.data
+        password_entered = form.password.data
+        user = User.query.filter_by(username=username_entered).first()
+        if user is None:
+            user = User(username=username_entered, email=email_entered, password=password_entered)
+            db.session.add(user)
+            db.session.commit()
+            flash('Thanks for registering!')
+            return redirect(url_for('auth.login'))
+        else:
+            return redirect(url_for('auth.register'))
     return render_template('auth/register.html', form=form)
