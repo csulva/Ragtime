@@ -1,9 +1,9 @@
 from flask import Flask
-from flask import render_template, redirect, url_for, session, flash
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from config import config
 from flask_login import LoginManager
+
 
 bootstrap = Bootstrap()
 db = SQLAlchemy()
@@ -26,3 +26,5 @@ def create_app(config_name='default'):
     app.register_blueprint(auth_blueprint)
 
     return app
+
+

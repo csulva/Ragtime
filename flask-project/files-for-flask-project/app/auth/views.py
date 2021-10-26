@@ -4,14 +4,10 @@ from flask_login.utils import logout_user
 from . import auth
 from app import login_manager
 from flask_login import login_required, login_user, current_user
-from .forms import LoginForm
+from .forms import LoginForm, RegistrationForm
 from app.models import User
 
-@auth.route('/register')
-def register():
-    return render_template('register.html')
-
-@auth.route('/login')
+@auth.route('/login', methods=["GET", "POST"])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -33,3 +29,8 @@ def logout():
     logout_user()
     flash('You have been logged out successfully.')
     return redirect(url_for('main.index'))
+
+@auth.route('/register')
+def register():
+    form = RegistrationForm()
+    return render_template('auth/register.html', form=form)
