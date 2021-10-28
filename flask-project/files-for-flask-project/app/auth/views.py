@@ -15,14 +15,15 @@ def login():
         name_entered = form.email.data
         password_entered = form.password.data
         user = User.query.filter_by(email=name_entered).first()
+        #verify email exists User is None or not
         if user.verify_password(password_entered) == True:
             login_user(user, form.remember_me.data)
             next = request.args.get('next')
             if next is None or not next.startswith('/'):
                 next = url_for('main.index')
             return redirect(next)
-    else:
-        flash('Username or password is invalid')
+        else:
+            flash('Username or password is invalid')
     return render_template('auth/login.html', form=form)
 
 @auth.route('/logout')

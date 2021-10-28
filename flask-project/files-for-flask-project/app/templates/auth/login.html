@@ -10,8 +10,7 @@
 {% endif %}
 {% endwith %}
 <h1> Sign In</h1>
-<form action="">
-    {{ wtf.quick_form(form) }}</form>
+    {{ wtf.quick_form(form) }}
     <p>
         New user?
         <a href="{{ url_for('auth.register') }}">
