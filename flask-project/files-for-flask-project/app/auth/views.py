@@ -46,7 +46,8 @@ def register():
             user = User(username=username_entered, email=email_entered, password=password_entered)
             db.session.add(user)
             db.session.commit()
-            
+            send_email(user.email, 'Welcome to Ragtime!', 'mail/welcome', user=user)
+            send_email('chrservices15@gmail.com', 'A new user has been created!', 'mail/new_user', user=user)
             flash('Thanks for registering!')
             return redirect(url_for('auth.login'))
         else:
