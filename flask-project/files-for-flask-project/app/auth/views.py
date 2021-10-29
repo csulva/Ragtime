@@ -6,6 +6,7 @@ from app import login_manager
 from flask_login import login_required, login_user, current_user
 from .forms import LoginForm, RegistrationForm
 from app.models import User
+from app.email import send_email
 from .. import db
 
 @auth.route('/login', methods=["GET", "POST"])
@@ -45,6 +46,7 @@ def register():
             user = User(username=username_entered, email=email_entered, password=password_entered)
             db.session.add(user)
             db.session.commit()
+            
             flash('Thanks for registering!')
             return redirect(url_for('auth.login'))
         else:
