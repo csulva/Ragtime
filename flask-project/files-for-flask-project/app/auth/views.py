@@ -37,19 +37,34 @@ def logout():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        #Do I need this?
         username_entered = form.username.data
         email_entered = form.email.data
         password_entered = form.password.data
         user = User.query.filter_by(username=username_entered).first()
         if user is None:
             user = User(username=username_entered, email=email_entered, password=password_entered)
-            db.session.add(user)
-            db.session.commit()
+            token = user.generate_confirmation_token()
+            confirmation_link = url_for('auth.confirm', token=token, _external=True)
+            # db.session.add(user)
+            # db.session.commit()
             send_email(user.email, 'Welcome to Ragtime!', 'mail/welcome', user=user)
+            send_email(user.email, 'Confirm your account with Ragtime', 'auth/confirm',  confirmation_link=confirmation_link)
             send_email('chrservices15@gmail.com', 'A new user has been created!', 'mail/new_user', user=user)
             flash('Thanks for registering!')
             return redirect(url_for('auth.login'))
         else:
             return redirect(url_for('auth.register'))
     return render_template('auth/register.html', form=form)
+
+@auth.route('/confirm/<token>')
+@login_required
+def confirm(token):
+    if current_user.confirmed:
+        flash('You are already confirmed.')
+        return redirect(url_for('main.index'))
+    if current_user.confirm(token):
+        db.session.commit()
+        flash('You have confirmed your account! Thank you.')
+    else:
+        flash('Whoops, that confirmation link either expired or isn\'t valid.')
+        return redirect(url_for('main.index'))

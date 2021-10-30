@@ -2,7 +2,8 @@ from . import db
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import UserMixin
 from . import login_manager
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, exc
+from flask import current_app
 
 class Role(db.Model):
     __tablename__ = 'roles'
@@ -36,6 +37,22 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return f'<User: {self.username}>'
+
+    def generate_confirmation_token(self, expiration_sec=3600):
+        s = Serializer(current_app.secret_key, expiration_sec)
+        return s.dumps({'confirm_id': self.id}).decode('utf-8')
+
+    def confirm(self, token):
+        s = Serializer(current_app.secret_key)
+        try:
+            data = s.loads(token.encode('utf-8'))
+        except:
+            return False
+        if data.get('confirm_id') != self.id:
+            return False
+        self.confirmed = True
+        db.session.add(self)
+        return True
 
 @login_manager.user_loader
 def load_user(user_id):
