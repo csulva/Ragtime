@@ -2,6 +2,7 @@ from . import db
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import UserMixin
 from . import login_manager
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 class Role(db.Model):
     __tablename__ = 'roles'
@@ -18,6 +19,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), unique=True, index=True)
     email = db.Column(db.String(64), unique=True, index=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    confirmed = db.Column(db.Boolean, default=False)
 
     password_hash = db.Column(db.String(128))
 
