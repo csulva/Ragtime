@@ -83,3 +83,10 @@ def unconfirmed():
     if current_user.is_anonymous or current_user.confirmed:
         return redirect(url_for('main.index'))
     return render_template('auth/unconfirmed.html', user=current_user)
+
+# @auth.route('/resend_confirmation')
+# def resend_confirmation():
+    # user = User(username=username_entered, email=email_entered, password=password_entered)
+    # token = user.generate_confirmation_token()
+    # confirmation_link = url_for('auth.confirm', token=token, _external=True)
+    # send_email(user.email, 'Confirm your account with Ragtime', 'auth/confirm',  confirmation_link=confirmation_link)
