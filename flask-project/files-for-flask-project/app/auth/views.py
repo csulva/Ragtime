@@ -17,12 +17,13 @@ def login():
         password_entered = form.password.data
         user = User.query.filter_by(email=name_entered).first()
         #verify email exists User is None or not
-        if user.verify_password(password_entered) == True:
-            login_user(user, form.remember_me.data)
-            next = request.args.get('next')
-            if next is None or not next.startswith('/'):
-                next = url_for('main.index')
-            return redirect(next)
+        if user is not None:
+            if user.verify_password(password_entered) == True:
+                login_user(user, form.remember_me.data)
+                next = request.args.get('next')
+                if next is None or not next.startswith('/'):
+                    next = url_for('main.index')
+                return redirect(next)
         else:
             flash('Username or password is invalid')
     return render_template('auth/login.html', form=form)
@@ -45,8 +46,8 @@ def register():
             user = User(username=username_entered, email=email_entered, password=password_entered)
             token = user.generate_confirmation_token()
             confirmation_link = url_for('auth.confirm', token=token, _external=True)
-            # db.session.add(user)
-            # db.session.commit()
+            db.session.add(user)
+            db.session.commit()
             send_email(user.email, 'Welcome to Ragtime!', 'mail/welcome', user=user)
             send_email(user.email, 'Confirm your account with Ragtime', 'auth/confirm',  confirmation_link=confirmation_link)
             send_email('chrservices15@gmail.com', 'A new user has been created!', 'mail/new_user', user=user)
@@ -69,20 +70,20 @@ def confirm(token):
         flash('Whoops, that confirmation link either expired or isn\'t valid.')
         return redirect(url_for('main.index'))
 
-@auth.before_app_request
-def before_request():
-    if current_user.is_authenticated \
-            and not current_user.confirmed \
-            and request != 'static' \
-            and request.blueprint != 'auth' \
-            and request.endpoint != 'static':
-        return redirect(url_for('auth.unconfirmed'))
+# @auth.before_app_request
+# def before_request():
+#     if current_user.is_authenticated \
+#             and not current_user.confirmed \
+#             and request != 'static' \
+#             and request.blueprint != 'auth' \
+#             and request.endpoint != 'static':
+#         return redirect(url_for('auth.unconfirmed'))
 
-@auth.route('/unconfirmed')
-def unconfirmed():
-    if current_user.is_anonymous or current_user.confirmed:
-        return redirect(url_for('main.index'))
-    return render_template('auth/unconfirmed.html', user=current_user)
+# @auth.route('/unconfirmed')
+# def unconfirmed():
+#     if current_user.is_anonymous or current_user.confirmed:
+#         return redirect(url_for('main.index'))
+#     return render_template('auth/unconfirmed.html', user=current_user)
 
 # @auth.route('/resend_confirmation')
 # def resend_confirmation():
