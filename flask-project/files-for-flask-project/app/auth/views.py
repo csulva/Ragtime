@@ -66,28 +66,31 @@ def confirm(token):
     if current_user.confirm(token):
         db.session.commit()
         flash('You have confirmed your account! Thank you.')
+        return redirect(url_for('main.index'))
     else:
         flash('Whoops, that confirmation link either expired or isn\'t valid.')
         return redirect(url_for('main.index'))
 
-# @auth.before_app_request
-# def before_request():
-#     if current_user.is_authenticated \
-#             and not current_user.confirmed \
-#             and request != 'static' \
-#             and request.blueprint != 'auth' \
-#             and request.endpoint != 'static':
-#         return redirect(url_for('auth.unconfirmed'))
+@auth.before_app_request
+def before_request():
+    if current_user.is_authenticated \
+            and not current_user.confirmed \
+            and request != 'static' \
+            and request.blueprint != 'auth' \
+            and request.endpoint != 'static':
+        return redirect(url_for('auth.unconfirmed'))
 
-# @auth.route('/unconfirmed')
-# def unconfirmed():
-#     if current_user.is_anonymous or current_user.confirmed:
-#         return redirect(url_for('main.index'))
-#     return render_template('auth/unconfirmed.html', user=current_user)
+@auth.route('/unconfirmed')
+def unconfirmed():
+    if current_user.is_anonymous or current_user.confirmed:
+        return redirect(url_for('main.index'))
+    return render_template('auth/unconfirmed.html', user=current_user)
 
-# @auth.route('/resend_confirmation')
-# def resend_confirmation():
-    # user = User(username=username_entered, email=email_entered, password=password_entered)
-    # token = user.generate_confirmation_token()
-    # confirmation_link = url_for('auth.confirm', token=token, _external=True)
-    # send_email(user.email, 'Confirm your account with Ragtime', 'auth/confirm',  confirmation_link=confirmation_link)
+@auth.route('/resend_confirmation')
+def resend_confirmation():
+    user = current_user
+    token = user.generate_confirmation_token()
+    confirmation_link = url_for('auth.confirm', token=token, _external=True)
+    send_email(user.email, 'Confirm your account with Ragtime', 'auth/confirm', user=user, confirmation_link=confirmation_link)
+    flash('Message sent! Check your email for the new confirmation link.')
+    return redirect(url_for('auth.unconfirmed'))
