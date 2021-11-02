@@ -67,15 +67,12 @@ class Role(db.Model):
                 role = Role(name=r)
             role.reset_permissions()
         # add whichever permissions the role needs
-        for perm in roles[r]:
-            role.add_permission(perm)
-        # if role is the default one, default is True
-        role.default = (role.name == default_role)
-        db.session.add(role)
-    db.session.commit()
-
-
-
+            for perm in roles[r]:
+                role.add_permission(perm)
+            # if role is the default one, default is True
+            role.default = (role.name == default_role)
+            db.session.add(role)
+        db.session.commit()
 
 
 class User(UserMixin, db.Model):
