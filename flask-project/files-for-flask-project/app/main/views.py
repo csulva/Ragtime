@@ -1,7 +1,7 @@
 from flask import session, render_template, url_for, flash, redirect
-from flask_login import login_required
+from flask_login import login_required, current_user
 from . import main
-from .forms import NameForm
+from .forms import NameForm, EditProfileForm
 from .. import db
 from ..models import Role, User, Permission
 from ..decorators import admin_required, permission_required
@@ -39,3 +39,25 @@ def for_admins_only():
 @permission_required(Permission.MODERATE)
 def for_moderators_only():
     return "Greetings, moderator!"
+
+@main.route('/user/<username>')
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    return render_template('user.html', user=user)
+
+@main.route('/edit-profile', methods=["GET", "POST"])
+@login_required
+def edit_profile():
+    form = EditProfileForm()
+    if form.validate_on_submit():
+        current_user.name = form.name.data
+        current_user.location = form.location.data
+        current_user.bio = form.bio.data
+        db.session.add(current_user._get_current_object())
+        db.session.commit()
+        flash('You successfully updated your profile! Looks great.')
+        return redirect(url_for('.user', username=current_user.username))
+    form.name.data = current_user.name
+    form.location.data = current_user.location
+    form.bio.data = current_user.bio
+    return render_template('edit_profile.html', form=form)

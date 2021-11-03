@@ -19,6 +19,12 @@
             </ul>
             <ul class='nav navbar-nav navbar right'>
                 {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('main.user', username=current_user.username) }}">
+                    Profile</a></li>
+                {% endif %}
+            </ul>
+            <ul class='nav navbar-nav navbar right'>
+                {% if current_user.is_authenticated %}
                     <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
                 {% else %}
                     <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
@@ -28,7 +34,6 @@
     </div>
 </div>
 {% endblock navbar %}
-
 
 {% block content %}
 <div class="container">
@@ -42,3 +47,8 @@
     {% endblock page_content %}
 </div>
 {% endblock content %}
+
+{% block scripts %}
+{{ super() }}
+{{ moment.include_moment() }}
+{% endblock %}
