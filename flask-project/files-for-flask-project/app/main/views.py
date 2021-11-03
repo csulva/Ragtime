@@ -3,7 +3,9 @@ from flask_login import login_required
 from . import main
 from .forms import NameForm
 from .. import db
-from ..models import Role, User
+from ..models import Role, User, Permission
+from ..decorators import admin_required, permission_required
+
 
 @main.route('/', methods=["GET", "POST"])
 def index():
@@ -25,3 +27,15 @@ def index():
     <p><a href="http://127.0.0.1:5000/songs">Song List</a></p>
     <p><a href="http://127.0.0.1:5000/about">About Me</a></p>
     """
+
+@main.route('/admin')
+@login_required
+@admin_required
+def for_admins_only():
+    return "Welcome, administrator!"
+
+@main.route('/moderate')
+@login_required
+@permission_required(Permission.MODERATE)
+def for_moderators_only():
+    return "Greetings, moderator!"

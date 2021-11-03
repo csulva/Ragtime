@@ -1,0 +1,2 @@
+Welcome to Ragtime!
+Please confirm your account with this link: <a href='{{ confirmation_link }}'>Confirm Account</a></p>

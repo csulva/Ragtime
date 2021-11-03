@@ -1,3 +1,4 @@
+from flask_login.mixins import AnonymousUserMixin
 from . import db
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import UserMixin
@@ -85,6 +86,14 @@ class User(UserMixin, db.Model):
 
     password_hash = db.Column(db.String(128))
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        if self.role is None:
+            if self.username == current_app.config['RAGTIME_ADMIN']:
+                self.role = Role.query.filter_by(name='Administrator').first()
+            if self.role is None:
+                self.role = Role.query.filter_by(default=True).first()
+
     @property
     def password(self):
         raise AttributeError('Password is not a readable attribute')
@@ -99,9 +108,10 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return f'<User: {self.username}>'
 
-    def generate_confirmation_token(self, expiration_sec=3600):
+    def generate_confirmation_token(self, expiration_sec=1500000):
         s = Serializer(current_app.secret_key, expiration_sec)
-        return s.dumps({'confirm_id': self.id}).decode('utf-8')
+        x = s.dumps({'confirm_id': self.id}).decode('utf-8')
+        return x
 
     def confirm(self, token):
         s = Serializer(current_app.secret_key)
@@ -114,6 +124,21 @@ class User(UserMixin, db.Model):
         self.confirmed = True
         db.session.add(self)
         return True
+
+    def can(self, perm):
+        return self.role is not None and self.role.has_permission(perm)
+
+    def is_administrator(self):
+        return self.can(Permission.ADMIN)
+
+class AnonymousUser(AnonymousUserMixin):
+    def can(self, perm):
+        return False
+
+    def is_administrator(self):
+        return False
+
+login_manager.anonymous_user = AnonymousUser
 
 @login_manager.user_loader
 def load_user(user_id):
