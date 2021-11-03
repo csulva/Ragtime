@@ -61,3 +61,9 @@ def edit_profile():
     form.location.data = current_user.location
     form.bio.data = current_user.bio
     return render_template('edit_profile.html', form=form)
+
+@main.route('/editprofile/<int:id>')
+@login_required
+@admin_required
+def admin_edit_profile():
+    pass

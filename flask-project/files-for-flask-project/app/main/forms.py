@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField, TextAreaField
 from wtforms import validators
+from wtforms.fields.core import BooleanField, SelectField
 from wtforms.validators import DataRequired, Length
 
 class NameForm(FlaskForm):
@@ -16,3 +17,11 @@ class EditProfileForm(FlaskForm):
     location = StringField("Location", validators=[Length(0, 64)])
     bio = TextAreaField("Bio")
     submit = SubmitField("Submit")
+
+class AdminLevelEditProfileForm(FlaskForm):
+    username = StringField("Username", validators=[Length(0, 64)])
+    confirmed = BooleanField()
+    role = SelectField(u'Role', choices=['User', 'Moderator', 'Administrator'], coerce=int)
+    name = StringField("Name", validators=[Length(64)])
+    location = StringField("Location", validators=[Length(64)])
+    bio = TextAreaField("Bio")
