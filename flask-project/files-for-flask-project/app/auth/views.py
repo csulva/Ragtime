@@ -44,10 +44,10 @@ def register():
         user = User.query.filter_by(username=username_entered).first()
         if user is None:
             user = User(username=username_entered, email=email_entered, password=password_entered)
-            token = user.generate_confirmation_token()
-            confirmation_link = url_for('auth.confirm', token=token, _external=True)
             db.session.add(user)
             db.session.commit()
+            token = user.generate_confirmation_token()
+            confirmation_link = url_for('auth.confirm', token=token, _external=True)
             send_email(user.email, 'Welcome to Ragtime!', 'mail/welcome', user=user)
             send_email(user.email, 'Confirm your account with Ragtime', 'auth/confirm',  confirmation_link=confirmation_link)
             send_email('chrservices15@gmail.com', 'A new user has been created!', 'mail/new_user', user=user)

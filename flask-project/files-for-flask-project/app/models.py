@@ -131,6 +131,13 @@ class User(UserMixin, db.Model):
     def is_administrator(self):
         return self.can(Permission.ADMIN)
 
+    @staticmethod
+    def make_new_users_user_role():
+        for u in User.query.all():
+            if u.role == None:
+                u.role = Role.query.filter_by(default=True).first()
+                db.session.commit()
+
 class AnonymousUser(AnonymousUserMixin):
     def can(self, perm):
         return False
