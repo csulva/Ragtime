@@ -1,9 +1,9 @@
 from flask import session, render_template, url_for, flash, redirect
 from flask_login import login_required, current_user
 from . import main
-from .forms import NameForm, EditProfileForm
+from .forms import NameForm, EditProfileForm, AdminLevelEditProfileForm
 from .. import db
-from ..models import Role, User, Permission
+from ..models import Role, User, Permission, load_user
 from ..decorators import admin_required, permission_required
 
 
@@ -66,4 +66,27 @@ def edit_profile():
 @login_required
 @admin_required
 def admin_edit_profile():
-    pass
+    form = AdminLevelEditProfileForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        user_id = load_user(user.user_id)
+        user.username = form.username.data
+        user.confirmed = form.confirmed.data
+        # user.role = form.role.data
+        user.name = form.name.data
+        user.location = form.location.data
+        user.bio = form.bio.data
+        user.role = Role.query.filter_by(form.role.data).first()
+        db.session.add(user._get_current_object())
+        db.session.commit()
+        flash(f'You successfully updated {user.username}\'s profile.')
+    form.username.data = user.username
+    form.confirmed.data = user.confirmed
+    form.role.data = user.role
+    form.name.data = user.name
+    form.location.data = user.location
+    form.bio.data = user.bio
+    return render_template('editprofile.html', form=form, user_id=user_id)
+
+
+

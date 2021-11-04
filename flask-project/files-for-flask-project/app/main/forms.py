@@ -25,3 +25,4 @@ class AdminLevelEditProfileForm(FlaskForm):
     name = StringField("Name", validators=[Length(64)])
     location = StringField("Location", validators=[Length(64)])
     bio = TextAreaField("Bio")
+    submit = SubmitField("Submit")
