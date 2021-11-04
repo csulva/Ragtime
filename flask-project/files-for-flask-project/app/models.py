@@ -6,6 +6,7 @@ from . import login_manager
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, exc
 from flask import current_app
 from datetime import datetime
+import hashlib
 
 class Permission:
     FOLLOW = 1
@@ -148,6 +149,11 @@ class User(UserMixin, db.Model):
         self.last_seen = datetime.utcnow()
         db.session.add(self)
         db.session.commit()
+
+    def unicornify(self, size=128):
+        url = 'https://unicornify.pictures/avatar'
+        hash = hashlib.md5(self.email.lower().encode('utf-8')).hexdigest()
+        return f'{url}/{hash}?s={size}'
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, perm):

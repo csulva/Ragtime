@@ -9,6 +9,8 @@
 {{ super() }}
 <div class="page-header">
     <h1>{{ user.username }}</h1>
+    <img class="img-rounded profile-thumbnail" src="{{ user.unicornify() }}">
+    <div class="profile-header">
     <table class="table">
         <tbody>
         <tr>
@@ -41,7 +43,7 @@
     </a>
     {% endif %}
     {% if current_user.is_administrator() %}
-    <a class="btn btn-danger" href="{{ url_for('.editprofile', id=id) }}">
+    <a class="btn btn-danger" href="{{ url_for('.index') }}">
         Edit As Admin
     </a>
     {% endif %}
