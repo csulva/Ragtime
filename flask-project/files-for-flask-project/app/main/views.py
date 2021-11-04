@@ -65,11 +65,10 @@ def edit_profile():
 @main.route('/editprofile/<int:id>')
 @login_required
 @admin_required
-def admin_edit_profile():
+def admin_edit_profile(id):
     form = AdminLevelEditProfileForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
-        user_id = load_user(user.user_id)
         user.username = form.username.data
         user.confirmed = form.confirmed.data
         # user.role = form.role.data
@@ -77,16 +76,19 @@ def admin_edit_profile():
         user.location = form.location.data
         user.bio = form.bio.data
         user.role = Role.query.filter_by(form.role.data).first()
+        id = user.id
         db.session.add(user._get_current_object())
         db.session.commit()
         flash(f'You successfully updated {user.username}\'s profile.')
-    form.username.data = user.username
-    form.confirmed.data = user.confirmed
-    form.role.data = user.role
-    form.name.data = user.name
-    form.location.data = user.location
-    form.bio.data = user.bio
-    return render_template('editprofile.html', form=form, user_id=user_id)
+        return redirect(url_for('.user', username=user.username))
+    # form.username.data = user.username
+    # form.confirmed.data = user.confirmed
+    # form.role.data = user.role
+    # form.name.data = user.name
+    # form.location.data = user.location
+    # form.bio.data = user.bio
+    # id = user.id
+    return render_template('editprofile.html', form=form, id=id)
 
 
 

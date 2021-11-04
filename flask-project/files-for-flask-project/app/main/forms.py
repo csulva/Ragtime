@@ -20,9 +20,9 @@ class EditProfileForm(FlaskForm):
 
 class AdminLevelEditProfileForm(FlaskForm):
     username = StringField("Username", validators=[Length(0, 64)])
-    confirmed = BooleanField()
-    role = SelectField(u'Role', choices=['User', 'Moderator', 'Administrator'], coerce=int)
-    name = StringField("Name", validators=[Length(64)])
-    location = StringField("Location", validators=[Length(64)])
+    confirmed = BooleanField("Confirmed")
+    role = SelectField(u'Role', choices=[(1, 'User'), (2, 'Moderator'), (3, 'Administrator')], coerce=int)
+    name = StringField("Name", validators=[Length(0, 64)])
+    location = StringField("Location", validators=[Length(0, 64)])
     bio = TextAreaField("Bio")
     submit = SubmitField("Submit")
