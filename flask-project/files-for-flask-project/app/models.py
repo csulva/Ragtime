@@ -93,6 +93,8 @@ class User(UserMixin, db.Model):
     bio = db.Column(db.Text())
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
 
+    avatar_hash = db.Column(db.String(32))
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         if self.role is None:
@@ -100,6 +102,8 @@ class User(UserMixin, db.Model):
                 self.role = Role.query.filter_by(name='Administrator').first()
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
+        if self.email is not None and self.avatar_hash is None:
+            self.avatar_hash = self.email_hash()
 
     @property
     def password(self):
@@ -150,9 +154,12 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def email_hash(self):
+        return hashlib.md5(self.email.lower().encode('utf-8')).hexdigest()
+
     def unicornify(self, size=128):
         url = 'https://unicornify.pictures/avatar'
-        hash = hashlib.md5(self.email.lower().encode('utf-8')).hexdigest()
+        hash = self.avatar_hash or self.email_hash()
         return f'{url}/{hash}?s={size}'
 
 class AnonymousUser(AnonymousUserMixin):
