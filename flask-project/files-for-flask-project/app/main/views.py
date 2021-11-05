@@ -1,32 +1,27 @@
 from flask import session, render_template, url_for, flash, redirect
 from flask_login import login_required, current_user
 from . import main
-from .forms import NameForm, EditProfileForm, AdminLevelEditProfileForm
+from .forms import NameForm, EditProfileForm, AdminLevelEditProfileForm, CompositionForm
 from .. import db
-from ..models import Role, User, Permission, load_user
+from ..models import Role, User, Permission, load_user, Composition
 from ..decorators import admin_required, permission_required
 
 
 @main.route('/', methods=["GET", "POST"])
 def index():
-    form = NameForm()
-    if form.validate_on_submit():
-        name_entered = form.name.data
-        user = User.query.filter_by(username=name_entered).first()
-        if user is None:
-            user = User(username=name_entered)
-            db.session.add(user)
-            db.session.commit()
-            session['known'] = False
-        else:
-            session['known'] = True
-        session['name'] = name_entered
-        flash('Great! We hope you enjoy the community')
+    form = CompositionForm()
+    if current_user.can(Permission.PUBLISH) \
+            and form.validate_on_submit():
+        composition = Composition(
+            release_type=form.release_type.data,
+            title=form.title.data,
+            description=form.description.data,
+            artist=current_user._get_current_object())
+        db.session.add(composition)
+        db.session.commit()
         return redirect(url_for('.index'))
-    return f""" {render_template('index.html', form=form, name=session.get('name'), known=session.get('known', False))}
-    <p><a href="http://127.0.0.1:5000/songs">Song List</a></p>
-    <p><a href="http://127.0.0.1:5000/about">About Me</a></p>
-    """
+    compositions = Composition.query.order_by(Composition.timestamp.desc()).all()
+    return render_template('index.html', form=form, compositions=compositions)
 
 @main.route('/admin')
 @login_required
