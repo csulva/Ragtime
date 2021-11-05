@@ -2,16 +2,9 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block content %}
+{{ super() }}
 <h2>Register</h2>
-<form method="POST" action="/auth/register">
-    {{ wtf.quick_form(form) }}</form>
 
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-    <div class="notification is-danger">
-        {{ messages[0] }}. Go to <a href="{{ url_for('auth.login') }}">login page</a>.
-    </div>
-{% endif %}
-{% endwith %}
+{{ wtf.quick_form(form) }}
 
 {% endblock content %}
