@@ -30,13 +30,13 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Username already exists.')
 
 class ChangeEmail(FlaskForm):
-    email = StringField("Old Email", validators=[DataRequired(), Email()])
-    new_email = StringField("New Email", validators=[DataRequired(), Email()])
+    old_email = StringField("Old Email", validators=[DataRequired(), Email()])
+    email = StringField("New Email", validators=[DataRequired(), Email()])
     submit = SubmitField("Submit")
 
     def validate_email(self, field):
-        if User.query.filter_by(new_email=field.data).first():
-            raise ValidationError('Email already registered.')
+        if User.query.filter_by(email=field.data).first():
+            raise ValidationError('Email already registered by another user.')
 
 class ChangePassword(FlaskForm):
     password = PasswordField("Old Password", validators=[DataRequired()])

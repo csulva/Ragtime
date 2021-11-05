@@ -96,16 +96,26 @@ def resend_confirmation():
     flash('Message sent! Check your email for the new confirmation link.')
     return redirect(url_for('auth.unconfirmed'))
 
-@auth.route('/change-email')
+@auth.route('/change-email', methods=["GET", "POST"])
+@login_required
 def change_email():
     form = ChangeEmail()
     if form.validate_on_submit():
-        return redirect(url_for('auth.login'))
-    
+        old_email = form.old_email.data
+        email = form.email.data
+        if current_user.email == old_email:
+            current_user.email = email
+            db.session.add(current_user)
+            db.session.commit()
+            flash('You have successfully changed your email address.')
+            return redirect(url_for('auth.login'))
+        else:
+            flash('Your old email does not match our records. Please try again.')
+    return render_template('auth/change-email.html', form=form)
 
-    return render_template('auth/change-email.html')
 
 @auth.route('/change-password', methods=['GET', 'POST'])
+@login_required
 def change_password():
     form = ChangePassword()
     if form.validate_on_submit():
