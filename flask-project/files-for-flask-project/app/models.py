@@ -95,6 +95,8 @@ class User(UserMixin, db.Model):
 
     avatar_hash = db.Column(db.String(32))
 
+    compositions = db.relationship('Composition', backref='artist', lazy='dynamic')
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         if self.role is None:
@@ -168,6 +170,11 @@ class AnonymousUser(AnonymousUserMixin):
 
     def is_administrator(self):
         return False
+
+class ReleaseType:
+    SINGLE = 1
+    EXTENDED_PLAY = 2
+    ALBUM = 3
 
 login_manager.anonymous_user = AnonymousUser
 
