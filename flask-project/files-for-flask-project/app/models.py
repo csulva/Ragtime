@@ -164,6 +164,16 @@ class User(UserMixin, db.Model):
         hash = self.avatar_hash or self.email_hash()
         return f'{url}/{hash}?s={size}'
 
+class Composition(db.Model):
+    __tablename__ = 'compositions'
+    id = db.Column(db.Integer, primary_key=True)
+    release_type = db.Column(db.Integer)
+    title = db.Column(db.String(64))
+    description = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime,
+        index=True, default=datetime.utcnow)
+    artist_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
 class AnonymousUser(AnonymousUserMixin):
     def can(self, perm):
         return False
