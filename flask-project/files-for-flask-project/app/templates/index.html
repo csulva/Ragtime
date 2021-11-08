@@ -26,15 +26,27 @@
     {{ wtf.quick_form(form) }}
     {{ compositions|length }}
 
-    <ul class="compositions"> {# All compositions #}
-        <li class="composition"> {# Single composition #}
-            <div class="composition-thumbnail"> {# Avatar #} </div>
-            <div class="composition-content"> {# Composition content #}
-                <div class="composition-date">{# date #}</div>
-                <div class="composition-artist">{# title #}</div>
-                {# ... #}
+<ul class="compositions">Compositions {# All compositions #}
+    <li class="composition">{# Single composition #}
+        <div class="composition-thumbnail">
+            <a href="{{url_for('main.user', username=user.username)}}"><img class="img-rounded profile-thumbnail" src="{{ user.unicornify() }}"></a>
+        </div>
+        <div class="composition-content">
+            <div class="composition-artist">
+                <a href="{{url_for('main.user', username=user.username)}}">{{user.username}}</a>
             </div>
-        </li>
+            <div class="composition-date">
+                <p>Date: {{ compositions.timestamp }}</p>
+            </div>
+            <div class="composition-release-type">
+                {{ compositions.release_type }}
+            </div>
+            <div class="composition-artist">{{compositions.title}}</div>
+            <div>
+                {{compositions.description}}
+            </div>
+        </div>
+    </li>
 
 </ul>
 {% endblock content %}

@@ -5,3 +5,43 @@
     min-height: 260px;
     margin-left: 150px;
 }
+
+ul.compositions {
+    list-style-type: none;
+    padding: 0px;
+    margin: 16px 0px 0px 0px;
+    border-top: 1px solid #e0e0e0;
+}
+ul.compositions {
+    margin: 0px;
+    border-top: none;
+}
+ul.compositions li.composition {
+    padding: 8px;
+    border-bottom: 1px solid #e0e0e0;
+}
+ul.compositions li.composition:hover {
+    background-color: #f0f0f0;
+}
+div.composition-date {
+    float: right;
+}
+div.composition-artist {
+    font-weight: normal;
+}
+div.composition-release-type {
+    font-style: italic;
+}
+div.composition-title {
+    font-weight: bold;
+}
+/* for showing user avatar */
+div.composition-thumbnail {
+    position: absolute;
+}
+/* the composition-content div surrounds the textual
+   composition content (title, release type, etc) */
+div.composition-content {
+    margin-left: 72px;
+    min-height: 72px;
+}

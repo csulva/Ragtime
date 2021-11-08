@@ -20,8 +20,9 @@ def index():
         db.session.add(composition)
         db.session.commit()
         return redirect(url_for('.index'))
+    user = User.query.filter_by(id=Composition.artist_id).first()
     compositions = Composition.query.order_by(Composition.timestamp.desc()).all()
-    return render_template('index.html', form=form, compositions=compositions)
+    return render_template('index.html', form=form, compositions=compositions, user=user)
 
 @main.route('/admin')
 @login_required
