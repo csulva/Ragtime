@@ -37,3 +37,5 @@ def compositions(count=100):
                         artist=u)
         db.session.add(c)
     db.session.commit()
+    for c in Composition.query.all():
+        c.generate_slug()

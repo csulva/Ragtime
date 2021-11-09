@@ -19,6 +19,7 @@ def index():
             artist=current_user._get_current_object())
         db.session.add(composition)
         db.session.commit()
+        composition.generate_slug()
         return redirect(url_for('.index'))
     page = request.args.get('page', 1, type=int)
     pagination = Composition.query.order_by(Composition.timestamp.desc()).paginate(

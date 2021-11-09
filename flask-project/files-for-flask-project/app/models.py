@@ -1,3 +1,4 @@
+import re
 from flask_login.mixins import AnonymousUserMixin
 from . import db
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -175,6 +176,7 @@ class Composition(db.Model):
         index=True, default=datetime.utcnow)
     artist_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     description_html = db.Column(db.Text)
+    slug = db.Column(db.String(128), unique=True)
 
     @staticmethod
     def on_changed_description(target, value, oldvalue, initiator):
@@ -183,6 +185,11 @@ class Composition(db.Model):
                                            tags=allowed_tags,
                                            strip=True))
         target.description_html = html
+
+    def generate_slug(self):
+        self.slug = f"{self.id}-" + re.sub(r'[^\w]+', '-', self.title.lower())
+        db.session.add(self)
+        db.session.commit()
 
 db.event.listen(Composition.description,
                 'set',
