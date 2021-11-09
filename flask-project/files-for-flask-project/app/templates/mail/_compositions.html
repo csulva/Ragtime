@@ -1,29 +1,4 @@
-{% extends "base.html" %}
-{% import 'bootstrap/wtf.html' as wtf %}
-{% import "_macros.html" as macros %}
-
-{% block navbar %}
-    {{super()}}
-{% endblock navbar%}
-
-
-{% block content %}
-{{super()}}
-<h1>Welcome to Ragtime,
-    {% if current_user.is_authenticated %}
-        {{ current_user.username }}
-    {%- else %}
-        Anonymous
-    {%- endif %}!
-</h1>
-<div class="page-header">
-    {% if not known %}
-    <p>Mucho gusto! (Nice to meet you!)</p>
-    {% else %}
-    <p>Enjoy your stay.</p>
-    {% endif %}
-</div>
-    {{ wtf.quick_form(form) }}
+{% include _compositions.html %}
 
 <ul class="compositions">
     {% for composition in compositions %}
@@ -55,10 +30,3 @@
     </li>
     {% endfor %}
 </ul>
-
-{% if pagination %}
-<div class="pagination">
-    {{ macros.pagination_widget(pagination, '.index') }}
-</div>
-{% endif %}
-{% endblock content %}

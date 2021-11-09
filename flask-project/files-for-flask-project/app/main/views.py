@@ -1,4 +1,4 @@
-from flask import session, render_template, url_for, flash, redirect
+from flask import session, render_template, url_for, flash, redirect, request, current_app
 from flask_login import login_required, current_user
 from . import main
 from .forms import NameForm, EditProfileForm, AdminLevelEditProfileForm, CompositionForm
@@ -20,9 +20,13 @@ def index():
         db.session.add(composition)
         db.session.commit()
         return redirect(url_for('.index'))
-    user = User.query.filter_by(id=Composition.artist_id).first()
-    compositions = Composition.query.order_by(Composition.timestamp.desc()).all()
-    return render_template('index.html', form=form, compositions=compositions, user=user)
+    page = request.args.get('page', 1, type=int)
+    pagination = Composition.query.order_by(Composition.timestamp.desc()).paginate(
+            page,
+            per_page=current_app.config['RAGTIME_COMPS_PER_PAGE'],
+            error_out=False)
+    compositions = pagination.items
+    return render_template('index.html', form=form, compositions=compositions, pagination=pagination)
 
 @main.route('/admin')
 @login_required
@@ -39,7 +43,13 @@ def for_moderators_only():
 @main.route('/user/<username>')
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    return render_template('user.html', user=user)
+    page = request.args.get('page', 1, type=int)
+    pagination = Composition.query.order_by(Composition.timestamp.desc()).paginate(
+            page,
+            per_page=current_app.config['RAGTIME_COMPS_PER_PAGE'],
+            error_out=False)
+    compositions = pagination.items
+    return render_template('user.html', user=user, compositions=compositions)
 
 @main.route('/edit-profile', methods=["GET", "POST"])
 @login_required
