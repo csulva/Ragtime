@@ -7,6 +7,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, exc
 from flask import current_app
 from datetime import datetime
 import hashlib
+import bleach
 
 class Permission:
     FOLLOW = 1
@@ -173,6 +174,19 @@ class Composition(db.Model):
     timestamp = db.Column(db.DateTime,
         index=True, default=datetime.utcnow)
     artist_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    description_html = db.Column(db.Text)
+
+    @staticmethod
+    def on_changed_description(target, value, oldvalue, initiator):
+        allowed_tags = ['a']
+        html = bleach.linkify(bleach.clean(value,
+                                           tags=allowed_tags,
+                                           strip=True))
+        target.description_html = html
+
+db.event.listen(Composition.description,
+                'set',
+                Composition.on_changed_description)
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, perm):
