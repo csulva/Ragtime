@@ -1,7 +1,6 @@
-{% include _compositions.html %}
 
 <ul class="compositions">
-    {% for composition in compositions %}
+    {% for composition in current_user.compositions %}
     <li class = "composition">
         <div class="profile-thumbnail">
             <a href="{{ url_for('main.user', username=composition.artist.username) }}">
