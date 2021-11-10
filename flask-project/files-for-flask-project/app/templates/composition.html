@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}{{super()}}{% endblock title %}
+
+{% block navbar %}
+    {{ super() }}
+{% endblock navbar %}
+{% block content %}
+{{ super() }}
+<div>
+{% include '_compositions.html' %}
+</div>
+{% if compositions[0].artist.username == current_user.username %}
+<a class="btn btn-default" href="{{ url_for('.edit_composition', slug=slug) }}">
+    Edit Composition
+</a>
+{% endif %}
+{% if current_user.is_administrator() %}
+<a class="btn btn-danger" href="{{ url_for('.edit_composition', slug=slug) }}">
+    Edit Composition As Admin
+</a>
+{% endif %}
+{% endblock content %}

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{super()}} User {{user_name}}{% endblock title %}
+{% block title %}{{super()}} User {{user.username}}{% endblock title %}
 
 {% block navbar %}
     {{ super() }}
@@ -50,4 +50,5 @@
 </div>
 <h3>Compositions by {{ user.username }}</h3>
 {% include '_compositions.html' %}
+
 {% endblock %}

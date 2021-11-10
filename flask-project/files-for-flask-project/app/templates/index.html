@@ -49,8 +49,16 @@
                     Album
                 {% endif %}
             </div>
-            <div class="composition-title">{{ composition.title }}</div>
-            <div>{{ composition.description }}</div>
+            <div class="composition-title">
+                <a href='{{ url_for("main.composition", slug=composition.slug) }}'>{{ composition.title }}</a>
+            </div>
+            <div class="composition-description">
+                {% if composition.description_html %}
+                {{ composition.description_html | safe }}
+                {% else %}
+                {{ composition.description }}
+                {% endif %}
+            </div>
         </div>
     </li>
     {% endfor %}

@@ -50,6 +50,7 @@ def user(username):
             per_page=current_app.config['RAGTIME_COMPS_PER_PAGE'],
             error_out=False)
     compositions = pagination.items
+    compositions = user.compositions
     return render_template('user.html', user=user, compositions=compositions)
 
 @main.route('/edit-profile', methods=["GET", "POST"])
@@ -94,5 +95,29 @@ def admin_edit_profile(id):
     form.bio.data = user.bio
     return render_template('editprofile.html', form=form)
 
+@main.route('/composition/<slug>')
+def composition(slug):
+    composition = Composition.query.filter_by(slug=slug).first_or_404()
+    slug = composition.slug
+    return render_template('composition.html', compositions=[composition], slug=slug)
 
-
+@main.route('/edit/<slug>', methods=["GET", "POST"])
+@login_required
+def edit_composition(slug):
+    form = CompositionForm()
+    composition = composition = Composition.query.filter_by(slug=slug).first_or_404()
+    if form.validate_on_submit():
+        composition.release_type=form.release_type.data
+        composition.title=form.title.data
+        composition.description=form.description.data
+        composition.artist=composition.artist
+        composition.slug=None
+        db.session.add(composition)
+        db.session.commit()
+        composition.generate_slug()
+        flash(f'You successfully updated your composition.')
+        return redirect(url_for('.composition', slug=composition.slug))
+    form.release_type.data=composition.release_type
+    form.title.data=composition.title
+    form.description.data=composition.description
+    return render_template('edit-composition.html', form=form)

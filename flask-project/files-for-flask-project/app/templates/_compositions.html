@@ -1,6 +1,6 @@
 
 <ul class="compositions">
-    {% for composition in current_user.compositions %}
+    {% for composition in compositions %}
     <li class = "composition">
         <div class="profile-thumbnail">
             <a href="{{ url_for('main.user', username=composition.artist.username) }}">
@@ -23,7 +23,9 @@
                     Album
                 {% endif %}
             </div>
-            <div class="composition-title">{{ composition.title }}</div>
+            <div class="composition-title">
+                <a href='{{ url_for("main.composition", slug=composition.slug) }}'>{{ composition.title }}</a>
+            </div>
             <div class="composition-description">
                 {% if composition.description_html %}
                 {{ composition.description_html | safe }}
