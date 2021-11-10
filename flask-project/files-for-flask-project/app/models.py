@@ -1,5 +1,6 @@
 import re
 from flask_login.mixins import AnonymousUserMixin
+from sqlalchemy.orm import backref
 from . import db
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import UserMixin
@@ -79,6 +80,12 @@ class Role(db.Model):
             db.session.add(role)
         db.session.commit()
 
+class Follow(db.Model):
+    __tablename__ = 'follows'
+
+    follower_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    following_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -94,10 +101,19 @@ class User(UserMixin, db.Model):
     location = db.Column(db.String(64))
     bio = db.Column(db.Text())
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
-
     avatar_hash = db.Column(db.String(32))
-
     compositions = db.relationship('Composition', backref='artist', lazy='dynamic')
+
+    following = db.relationship('Follow', 
+                foreign_keys=[Follow.follower_id],
+                backref=db.backref('follower', lazy='joined'),
+                lazy='dynamic',
+                cascade='all, delete-orphan')
+    followers = db.relationship('Follow',
+                foreign_keys=[Follow.following_id],
+                backref=db.backref('following', lazy='joined'),
+                lazy='dynamic',
+                cascade='all, delete-orphan')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -165,6 +181,26 @@ class User(UserMixin, db.Model):
         url = 'https://unicornify.pictures/avatar'
         hash = self.avatar_hash or self.email_hash()
         return f'{url}/{hash}?s={size}'
+
+    def follow(self, user):
+        if not self.is_following(user):
+            f = Follow(follower=self, following=user)
+            db.session.add(f)
+
+    def unfollow(self, user):
+        f = self.following.filter_by(following_id=user.id).first()
+        if f:
+            db.session.delete(f)
+
+    def is_following(self, user):
+        if user.id is None:
+            return False
+        return self.following.filter_by(following_id=user.id).first() is not None
+
+    def is_a_follower(self, user):
+        if user.id is None:
+            return False
+        return self.followers.filter_by(follower_id=user.id).first() is not None
 
 class Composition(db.Model):
     __tablename__ = 'compositions'
