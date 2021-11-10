@@ -7,9 +7,7 @@
 {% endblock navbar %}
 {% block content %}
 {{ super() }}
-<div>
 {% include '_compositions.html' %}
-</div>
 {% if compositions[0].artist.username == current_user.username %}
 <a class="btn btn-default" href="{{ url_for('.edit_composition', slug=slug) }}">
     Edit Composition

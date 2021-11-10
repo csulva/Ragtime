@@ -1,5 +1,5 @@
 from sqlalchemy.exc import IntegrityError
-from faker import Faker
+from fake import Faker
 from app import db
 from app.models import User, Composition
 
