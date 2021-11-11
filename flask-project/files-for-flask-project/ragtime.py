@@ -1,5 +1,5 @@
 from app import create_app, db
-from app.models import Composition, Role, User
+from app.models import Composition, Role, User, Follow
 import os
 from flask_migrate import Migrate
 
@@ -9,18 +9,6 @@ migrate = Migrate(app, db, render_as_batch=True)
 
 @app.shell_context_processor
 def make_shell_context():
-    return dict(db=db, Role=Role, User=User, Composition=Composition)
-
-
-# @app.route('/zodiac', methods=["GET", "POST"])
-# def zodiac():
-#     form = DateForm()
-#     zodiac_signs = ['Aquarius', 'Pisces', 'Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn']
-#     if form.validate_on_submit():
-#         session['date'] = form.date.data
-#         flash(f'Your zodiac sign is... ')
-#         return redirect(url_for('zodiac'))
-#     return render_template('zodiac.html', form=form, date=session.get('date'), zodiac_signs=zodiac_signs)
-
+    return dict(db=db, Role=Role, User=User, Composition=Composition, Follow=Follow)
 
 app.run()
