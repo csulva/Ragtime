@@ -20,6 +20,7 @@ class Config:
     RAGTIME_MAIL_SENDER = f'Ragtime Admin <{RAGTIME_ADMIN}>'
 
     RAGTIME_COMPS_PER_PAGE = 20
+    RAGTIME_FOLLOWERS_PER_PAGE = 20
 
     @staticmethod
     def init_app(app):
