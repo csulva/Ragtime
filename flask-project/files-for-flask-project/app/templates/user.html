@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% import "_macros.html" as macros %}
+
 {% block title %}{{super()}} User {{user.username}}{% endblock title %}
 
 {% block navbar %}
@@ -20,6 +22,12 @@
         Follow
     </a>
     {% endif %}
+    <button type="button" class="btn btn-light">
+       <a href="{{ url_for('.following', username=user.username) }}">Following</a> <span class="badge badge-light">{{user.following.count()}}</span>
+      </button>
+    <button type="button" class="btn btn-light">
+        <a href="{{ url_for('.followers', username=user.username) }}">Followers</a> <span class="badge badge-light">{{user.followers.count()}}</span>
+       </button>
     <table class="table">
         <tbody>
         <tr>
@@ -60,9 +68,9 @@
 </div>
 <h3>Compositions by {{ user.username }}</h3>
 {% include '_compositions.html' %}
-{#{% if pagination %}
+{% if pagination %}
 <div class="pagination">
-    {{ macros.pagination_widget(pagination, '.user') }}
+    {{ macros.pagination_widget(pagination, '.user', username=username) }}
 </div>
-{% endif %}#}
+{% endif %}
 {% endblock %}

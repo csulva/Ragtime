@@ -45,12 +45,11 @@ def for_moderators_only():
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     page = request.args.get('page', 1, type=int)
-    pagination = Composition.query.order_by(Composition.timestamp.desc()).paginate(
+    pagination = Composition.query.filter_by(artist=user).order_by(Composition.timestamp.desc()).paginate(
             page,
             per_page=current_app.config['RAGTIME_COMPS_PER_PAGE'],
             error_out=False)
     compositions = pagination.items
-    compositions = user.compositions
     return render_template('user.html', user=user, compositions=compositions, pagination=pagination)
 
 @main.route('/edit-profile', methods=["GET", "POST"])

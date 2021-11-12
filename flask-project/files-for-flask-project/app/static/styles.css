@@ -49,3 +49,7 @@ table tr { border-bottom: 1px solid #e0e0e0;
     position: relative;
 }
 
+td.composition-row {
+    margin-left: 72px;
+    min-height: 72px;
+}

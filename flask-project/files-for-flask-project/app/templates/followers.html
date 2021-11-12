@@ -12,10 +12,10 @@
     <tbody>
         {% for f in user.followers.all() %}
         <tr>
-            <td class="row">
+            <td class="composition-row">
                 <img class="img-rounded profile-thumbnail" src="{{ f.follower.unicornify(size=30) }}">
             <a href="{{ url_for('main.user', username=f.follower.username) }}">{{f.follower.username}}</a></td>
-            <td>{{ f.timestamp }}</td>
+            <td>{{ moment(f.timestamp).fromNow() }}</td>
         </tr>
         {% endfor %}
     </tbody>
