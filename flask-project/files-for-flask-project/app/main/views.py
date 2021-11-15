@@ -1,4 +1,4 @@
-from flask import session, render_template, url_for, flash, redirect, request, current_app
+from flask import session, render_template, url_for, flash, redirect, request, current_app, make_response
 from flask_login import login_required, current_user
 from . import main
 from .forms import NameForm, EditProfileForm, AdminLevelEditProfileForm, CompositionForm
@@ -22,12 +22,33 @@ def index():
         composition.generate_slug()
         return redirect(url_for('.index'))
     page = request.args.get('page', 1, type=int)
+    show_followed = False
+    if current_user.is_authenticated:
+        show_followed = bool(request.cookies.get('show_followed', ''))
+    if show_followed:
+        query = current_user.followed_compositions
+    else:
+        query = Composition.query
     pagination = Composition.query.order_by(Composition.timestamp.desc()).paginate(
             page,
             per_page=current_app.config['RAGTIME_COMPS_PER_PAGE'],
             error_out=False)
     compositions = pagination.items
-    return render_template('index.html', form=form, compositions=compositions, pagination=pagination)
+    return render_template('index.html', form=form, compositions=compositions, pagination=pagination, show_followed=show_followed)
+
+@main.route('/all')
+@login_required
+def show_all():
+    resp = make_response(redirect(url_for('.index')))
+    resp.set_cookie('show_followed', '', max_age=30*24*60*60) # 30 days
+    return resp
+
+@main.route('/followed')
+@login_required
+def show_followed():
+    resp = make_response(redirect(url_for('.index')))
+    resp.set_cookie('show_followed', '1', max_age=30*24*60*60) # 30 days
+    return resp
 
 @main.route('/admin')
 @login_required

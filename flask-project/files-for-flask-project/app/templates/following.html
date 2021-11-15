@@ -12,6 +12,8 @@
     </thead>
     <tbody>
         {% for f in user.following.all() %}
+        {% if f.following.id == user.id %}
+        {% else %}
         <tr height=75px>
             <td>
             <img class="img-rounded profile-thumbnail" src="{{ f.following.unicornify(size=35) }}"></td>
@@ -19,6 +21,7 @@
             <a href="{{ url_for('main.user', username=f.following.username) }}">{{f.following.username}}</a></td>
             <td>{{ moment(f.timestamp).fromNow() }}</td>
         </tr>
+        {% endif %}
         {% endfor %}
     </tbody>
 </table>
