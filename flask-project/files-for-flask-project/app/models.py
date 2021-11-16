@@ -1,4 +1,5 @@
 import re
+from flask.helpers import url_for
 from flask_login.mixins import AnonymousUserMixin
 from sqlalchemy.orm import backref
 from . import db
@@ -10,6 +11,7 @@ from flask import current_app
 from datetime import datetime
 import hashlib
 import bleach
+from app.exceptions import ValidationError
 
 class Permission:
     FOLLOW = 1
@@ -229,6 +231,18 @@ class User(UserMixin, db.Model):
             return None
         return User.query.get(data['id'])
 
+    def to_json(self):
+        json_user = {
+            'url': url_for('api.get_user', id=self.id),
+            'username': self.username,
+            'last seen': self.last_seen,
+            'compositions_url': url_for('api.get_user_compositions', id=self.id),
+            'followed_compositions_url': url_for('api.get_user_followed', id=self.id),
+            'composition count': self.compositions.count(),
+        }
+        return json_user
+
+
 class Composition(db.Model):
     __tablename__ = 'compositions'
     id = db.Column(db.Integer, primary_key=True)
@@ -253,6 +267,35 @@ class Composition(db.Model):
         self.slug = f"{self.id}-" + re.sub(r'[^\w]+', '-', self.title.lower())
         db.session.add(self)
         db.session.commit()
+
+    def to_json(self):
+        json_composition = {
+            'url': url_for('api.get_composition', id=self.id),
+            'release_type': self.release_type,
+            'title': self.title,
+            'description': self.description,
+            'description_html': self.description_html,
+            'timestamp': self.timestamp,
+            'artist_url': url_for('api.get_user', id=self.artist.id),
+        }
+        return json_composition
+
+    @staticmethod
+    def from_json(json_composition):
+        release_type = json_composition.get('release_type')
+        title = json_composition.get('title')
+        description = json_composition.get('description')
+        if release_type is None:
+            raise ValidationError('Composition must have a release type.')
+        if title is None:
+            raise ValidationError('Composition must have a title.')
+        if description is None:
+            raise ValidationError('Composition must have a description.')
+        try:
+            return Composition(release_type=release_type, title=title, description=description)
+        except TypeError as e:
+            raise ValidationError(str(e))
+
 
 db.event.listen(Composition.description,
                 'set',
