@@ -46,6 +46,10 @@ div.composition-content {
     min-height: 72px;
 }
 
+div.composition-tabs {
+    margin-top: 16px;
+}
+
 td.row {
     position: relative;
 }

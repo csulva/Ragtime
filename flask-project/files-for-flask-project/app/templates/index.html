@@ -7,6 +7,7 @@
 {% endblock navbar%}
 
 
+
 {% block content %}
 {{super()}}
 <h1>Welcome to Ragtime,
@@ -25,7 +26,7 @@
 </div>
     {{ wtf.quick_form(form) }}
 
-<ul class="compositions">
+{#<ul class="compositions">
     {% for composition in compositions %}
     <li class = "composition">
         <div class="profile-thumbnail">
@@ -62,7 +63,22 @@
         </div>
     </li>
     {% endfor %}
-</ul>
+</ul>#}
+
+<div class="composition-tabs">
+    <ul class="nav nav-tabs">
+        <li {% if not show_followed %} class="active"{% endif %}>
+            <a href="{{ url_for('.show_all') }}">All</a>
+        </li>
+        {% if current_user.is_authenticated %}
+        <li {% if show_followed %} class="active"{% endif %}>
+            <a href="{{ url_for('.show_followed') }}">Followers</a>
+        </li>
+        {% endif %}
+    </ul>
+    {% include '_compositions.html' %}
+</div>
+
 
 {% if pagination %}
 <div class="pagination">
