@@ -26,6 +26,8 @@ def internal_server_error(e):
     if request.accept_mimetypes.accept_json and \
         not request.accept_mimetypes.accept_html:
         response = jsonify({'error': 'internal server error'})
+        response.status_code = 500
+        return response
     error_title = "Internal Server Error"
     error_msg = "Sorry, we seem to be experiencing some technical difficulties"
     return render_template('error.html',
