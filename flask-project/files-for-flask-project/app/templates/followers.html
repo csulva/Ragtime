@@ -12,7 +12,7 @@
     </thead>
     <tbody>
         {% for f in user.followers.all() %}
-        {% if f.following.id == user.id %}
+        {% if f.follower.id == user.id %}
         {% else %}
         <tr height=75px>
             <td>

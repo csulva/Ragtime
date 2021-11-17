@@ -29,7 +29,7 @@ def index():
         query = current_user.followed_compositions
     else:
         query = Composition.query
-    pagination = Composition.query.order_by(Composition.timestamp.desc()).paginate(
+    pagination = query.order_by(Composition.timestamp.desc()).paginate(
             page,
             per_page=current_app.config['RAGTIME_COMPS_PER_PAGE'],
             error_out=False)
