@@ -35,6 +35,19 @@ def create_app(config_name='default'):
     from .api import api as api_blueprint
     app.register_blueprint(api_blueprint)
 
+    if app.config['HTTPS_REDIRECT']:
+        from flask_talisman import Talisman
+        Talisman(app, content_security_policy={
+                'default-src': [
+                    "'self'",
+                    'cdnjs.cloudflare.com',
+                ],
+                # allow images from anywhere, 
+                #   including unicornify.pictures
+                'img-src': '*'
+            }
+        )
+
     return app
 
 
