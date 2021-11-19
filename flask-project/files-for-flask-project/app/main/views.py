@@ -125,7 +125,7 @@ def composition(slug):
 @login_required
 def edit_composition(slug):
     form = CompositionForm()
-    composition = composition = Composition.query.filter_by(slug=slug).first_or_404()
+    composition = Composition.query.filter_by(slug=slug).first_or_404()
     if form.validate_on_submit():
         composition.release_type=form.release_type.data
         composition.title=form.title.data
@@ -141,6 +141,15 @@ def edit_composition(slug):
     form.title.data=composition.title
     form.description.data=composition.description
     return render_template('edit-composition.html', form=form)
+
+@main.route('/delete/<slug>', methods=["GET", "POST"])
+@login_required
+def delete_composition(slug):
+    composition = Composition.query.filter_by(slug=slug).first_or_404()
+    db.session.delete(composition)
+    db.session.commit()
+    flash('You have successfully deleted the composition.')
+    return redirect(url_for('.index', composition=composition))
 
 @main.route('/follow/<username>')
 @login_required
