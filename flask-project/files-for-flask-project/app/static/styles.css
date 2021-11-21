@@ -35,12 +35,11 @@ div.composition-release-type {
 div.composition-title {
     font-weight: bold;
 }
-/* for showing user avatar */
+
 div.composition-thumbnail {
     position: absolute;
 }
-/* the composition-content div surrounds the textual
-   composition content (title, release type, etc) */
+
 div.composition-content {
     margin-left: 72px;
     min-height: 72px;
