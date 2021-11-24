@@ -13,7 +13,8 @@
     <h1>{{ user.username }}</h1>
     <img class="img-rounded profile-thumbnail" src="{{ user.unicornify() }}">
     <div class="profile-header">
-    {% if current_user.is_following(user) and current_user.username != user.username %}
+    {% if current_user.is_anonymous %}
+    {% elif current_user.is_following(user) and current_user.username != user.username %}
     <a class="btn btn-default" href="{{ url_for('.unfollow', username=user.username) }}">
         Unfollow
     </a>

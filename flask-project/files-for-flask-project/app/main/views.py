@@ -1,5 +1,7 @@
 from flask import session, render_template, url_for, flash, redirect, request, current_app, make_response
 from flask_login import login_required, current_user
+
+from app.auth.views import login
 from . import main
 from .forms import NameForm, EditProfileForm, AdminLevelEditProfileForm, CompositionForm
 from .. import db

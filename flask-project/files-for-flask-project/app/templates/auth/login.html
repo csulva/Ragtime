@@ -9,12 +9,20 @@
     </div>
 {% endif %}
 {% endwith %}
-<h1> Sign In</h1>
+<div class='profile-header'>
+<h1>Sign In</h1>
+    <div class=" col-md-8">
     {{ wtf.quick_form(form) }}
-    <p>
+    </div>
+</div>
+
+<br>
+    <p style='min-height: 260px;
+    margin-left: 150px'>
         New user?
         <a href="{{ url_for('auth.register') }}">
         Click here to register
         </a>
-        </p>
+    </p>
+
 {% endblock %}

@@ -10,6 +10,8 @@
 
 {% block content %}
 {{super()}}
+<div style='min-height: 260px;
+margin-left: 80px; margin-right: 80px'>
 <h1>Welcome to Ragtime,
     {% if current_user.is_authenticated %}
         {{ current_user.username }}
@@ -17,15 +19,15 @@
         Anonymous
     {%- endif %}!
 </h1>
-<div class="page-header">
+    <div class="page-header">
     {% if not known %}
     <p>Mucho gusto! (Nice to meet you!)</p>
     {% else %}
     <p>Enjoy your stay.</p>
     {% endif %}
-</div>
-    {{ wtf.quick_form(form) }}
+    </div>
 
+    {{ wtf.quick_form(form) }}
 {#<ul class="compositions">
     {% for composition in compositions %}
     <li class = "composition">
@@ -65,7 +67,7 @@
     {% endfor %}
 </ul>#}
 
-<div class="composition-tabs">
+    <div class="composition-tabs">
     <ul class="nav nav-tabs">
         <li {% if not show_followed %} class="active"{% endif %}>
             <a href="{{ url_for('.show_all') }}">All</a>
@@ -77,8 +79,8 @@
         {% endif %}
     </ul>
     {% include '_compositions.html' %}
+    </div>
 </div>
-
 
 {% if pagination %}
 <div class="pagination">
