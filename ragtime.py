@@ -17,7 +17,7 @@ def deploy():
     """ Run deployment tasks """
     db.create_all()
     # migrate database
-    # upgrade()
+    upgrade()
 
     Role.insert_roles()
 

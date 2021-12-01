@@ -40,7 +40,7 @@ class TestingConfig(Config):
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        f'sqlite:///{os.path.join(basedir, "data.sqlite")}'
+        f'sqlite:////Users/christophersulva/Desktop/codingnomads/Flask/data.sqlite'
 
     @classmethod
     def init_app(cls, app):
