@@ -1,4 +1,3 @@
 -r prod.txt
-flask-talisman==0.7.0
 gunicorn==20.1.0
 psycopg2==2.8.6
