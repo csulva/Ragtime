@@ -19,6 +19,6 @@ def deploy():
     # migrate database
     upgrade()
 
-    Role.insert_roles()
+    # Role.insert_roles()
 
     User.add_self_follows()
