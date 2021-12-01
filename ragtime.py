@@ -15,12 +15,10 @@ def make_shell_context():
 @app.cli.command()
 def deploy():
     """ Run deployment tasks """
+    db.create_all()
     # migrate database
     upgrade()
 
     Role.insert_roles()
 
     User.add_self_follows()
-
-
-app.run()
