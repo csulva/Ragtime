@@ -9,8 +9,7 @@
 
 {% block page_content %}
 {{ super() }}
-<div class="page-header">
-    <h1>{{ user.username }}</h1>
+r
     <img class="img-rounded profile-thumbnail" src="{{ user.unicornify() }}">
     <div class="profile-header">
     {% if current_user.is_anonymous %}
