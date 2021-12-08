@@ -14,15 +14,15 @@
     <div class=" col-md-8">
     {{ wtf.quick_form(form) }}
     </div>
-</div>
-
-<br>
-    <p style='min-height: 260px;
-    margin-left: 150px'>
+    <br>
+    <p>
         New user?
         <a href="{{ url_for('auth.register') }}">
         Click here to register
         </a>
     </p>
+</div>
+
+
 
 {% endblock %}

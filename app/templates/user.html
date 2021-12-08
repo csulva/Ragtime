@@ -9,7 +9,6 @@
 
 {% block page_content %}
 {{ super() }}
-r
     <img class="img-rounded profile-thumbnail" src="{{ user.unicornify() }}">
     <div class="profile-header">
     {% if current_user.is_anonymous %}
@@ -69,7 +68,8 @@ r
 <h3>Compositions by {{ user.username }}</h3>
 {% include '_compositions.html' %}
 {% if pagination %}
-<div class="pagination">
+<div class="pagination" style="min-height: 260px;
+margin-left: 150px; margin-right: 150px;">
     {{ macros.pagination_widget(pagination, '.user', username=username) }}
 </div>
 {% endif %}
