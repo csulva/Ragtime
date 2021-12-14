@@ -65,12 +65,11 @@
     {% endif %}
     </div>
 </div>
+<div class="pagination">
 <h3>Compositions by {{ user.username }}</h3>
 {% include '_compositions.html' %}
 {% if pagination %}
-<div class="pagination" style="min-height: 260px;
-margin-left: 150px; margin-right: 150px;">
     {{ macros.pagination_widget(pagination, '.user', username=username) }}
-</div>
 {% endif %}
+</div>
 {% endblock %}

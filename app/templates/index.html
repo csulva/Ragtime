@@ -10,8 +10,7 @@
 
 {% block content %}
 {{super()}}
-<div style='min-height: 260px;
-margin-left: 80px; margin-right: 80px'>
+<div class="index-comps">
 <h1>Welcome to Ragtime,
     {% if current_user.is_authenticated %}
         {{ current_user.username }}
