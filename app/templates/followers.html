@@ -2,7 +2,6 @@
 {{ super() }}
 {% block content %}
 <h2>{{title_text}} {{user.username}}</h2>
-<div class="follow-table">
 <table class="table table-hover table.followers">
     <thead>
       <tr>
@@ -26,5 +25,4 @@
         {% endfor %}
     </tbody>
 </table>
-</div>
 {% endblock content %}
