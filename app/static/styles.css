@@ -6,6 +6,27 @@
     margin-left: 150px;
 }
 
+div.form-header {
+    min-height: 260px;
+    margin-left: 150px;
+    margin-right: 150px;
+}
+
+div.paragraph-div {
+    min-height: 260px;
+    margin: 16px 16px 16px 150px;
+}
+
+div.notification {
+    margin: 16px 16px 16px 150px;
+}
+
+div.pagination {
+    min-height: 260px;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
 ul.compositions {
     list-style-type: none;
     padding: 0px;
@@ -36,6 +57,12 @@ div.composition-title {
     font-weight: bold;
 }
 
+div.index-comps {
+    min-height: 260px;
+    margin-left: 80px;
+    margin-right: 80px
+}
+
 div.composition-thumbnail {
     position: absolute;
 }
@@ -51,4 +78,10 @@ div.composition-tabs {
 
 td.row {
     position: relative;
+}
+
+div.follow-table {
+    margin-left: 72px;
+    margin-right: 72px;
+    min-height: 72px;
 }
