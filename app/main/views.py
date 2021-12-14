@@ -23,6 +23,8 @@ def index():
         db.session.commit()
         composition.generate_slug()
         return redirect(url_for('.index'))
+    elif current_user.is_anonymous and form.validate_on_submit():
+        flash('You must be logged in to do that.')
     page = request.args.get('page', 1, type=int)
     show_followed = False
     if current_user.is_authenticated:
