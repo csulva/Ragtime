@@ -50,12 +50,18 @@ div.composition-date {
 }
 div.composition-artist {
     font-weight: normal;
+    padding: 2px
 }
 div.composition-release-type {
     font-style: italic;
+    padding: 2px
 }
 div.composition-title {
     font-weight: bold;
+    padding: 2px
+}
+div.composition-description {
+    padding: 3px
 }
 
 div.index-comps {
