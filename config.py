@@ -1,24 +1,27 @@
+# Config classes differentiated based on stage of application
+
 from logging import DEBUG
 import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+# Child config class
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or "anyrandomstringofevents#123"
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    # Email configurations
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True
-
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-
     RAGTIME_ADMIN = os.environ.get('RAGTIME_ADMIN')
     RAGTIME_MAIL_SUBJECT_PREFIX = 'Ragtime - '
     RAGTIME_MAIL_SENDER = f'Ragtime Admin <{RAGTIME_ADMIN}>'
 
+    # Pagination information
     RAGTIME_COMPS_PER_PAGE = 20
     RAGTIME_FOLLOWERS_PER_PAGE = 20
 
@@ -46,6 +49,7 @@ class ProductionConfig(Config):
     def init_app(cls, app):
         Config.init_app(app)
 
+        # Log handler for sending emails
         import logging
         from logging.handlers import SMTPHandler
         creds = None
@@ -66,6 +70,7 @@ class ProductionConfig(Config):
         mail_handler.setLevel(logging.ERROR)
         app.logger.addHandler(mail_handler)
 
+# For deploying to Heroku in production. FLASK_CONFIG should be 'heroku'.
 class HerokuConfig(ProductionConfig):
     HTTPS_REDIRECT = True if os.environ.get('DYNO') else False
 
@@ -84,7 +89,7 @@ class HerokuConfig(ProductionConfig):
         app.wsgi_app = ProxyFix(app.wsgi_app)
 
 
-
+# Names of config classes
 config = {'development': DevelopmentConfig,
 'testing': TestingConfig,
 'production': ProductionConfig,
