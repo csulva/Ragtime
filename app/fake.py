@@ -7,6 +7,11 @@ from random import randint
 import string
 
 def users(count=20):
+    """Creates fake users to use and manipulate in development
+
+    Args:
+        count (int, optional): The count/number you want to create. Defaults to 20.
+    """
     fake = Faker()
     i = 0
     while i < count:
@@ -26,6 +31,11 @@ def users(count=20):
                 db.session.rollback()
 
 def compositions(count=100):
+    """Creates fake compositions to use and manipulate in development
+
+    Args:
+        count (int, optional): The count/number you want to create. Defaults to 100.
+    """
     fake = Faker()
     user_count = User.query.count()
     for i in range(count):
