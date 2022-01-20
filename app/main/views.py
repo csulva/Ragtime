@@ -148,8 +148,18 @@ def edit_profile():
 @login_required
 @admin_required
 def admin_edit_profile(id):
+    """Edit the profile of any user as an administrator
+
+    Args:
+        id (int): The ID of the user whose profile is being edited
+
+    Returns:
+        editprofile.html file: Which renders the edit profile page to be able to edit any user's profile
+    """
     form = AdminLevelEditProfileForm()
+    # Search user based on their ID or 404 error if None
     user = User.query.filter_by(id=id).first_or_404()
+    # Activates the POST request to change the user's profile
     if form.validate_on_submit():
         user.username = form.username.data
         user.confirmed = form.confirmed.data
@@ -161,6 +171,7 @@ def admin_edit_profile(id):
         db.session.commit()
         flash(f'You successfully updated {user.username}\'s profile.')
         return redirect(url_for('.user', username=user.username))
+    # Shows the current information as a GET request
     form.username.data = user.username
     form.confirmed.data = user.confirmed
     form.role.data = user.role_id
@@ -171,6 +182,15 @@ def admin_edit_profile(id):
 
 @main.route('/composition/<slug>')
 def composition(slug):
+    """Function to be able to view the composition
+
+    Args:
+        slug (string): Each composition has a unique slug, and it's used to yield that particular
+        composition, in this case in html format
+
+    Returns:
+        composition.html file: Shows the particular composition in an html format
+    """
     composition = Composition.query.filter_by(slug=slug).first_or_404()
     slug = composition.slug
     return render_template('composition.html', compositions=[composition], slug=slug)
@@ -178,8 +198,19 @@ def composition(slug):
 @main.route('/edit/<slug>', methods=["GET", "POST"])
 @login_required
 def edit_composition(slug):
+    """Edit the information of the composition in a form. This is the page to do that.
+
+    Args:
+        slug (string): Each composition has a unique slug, and it's used to yield that particular
+        composition, in this case in html format
+
+    Returns:
+        edit-composition.html file: Renders the composition form to be able to edit it.
+    """
     form = CompositionForm()
+    # Searches the database for the particular composition based on the slug, otherwise returns 404
     composition = Composition.query.filter_by(slug=slug).first_or_404()
+    # Activates the POST request to change the composition information
     if form.validate_on_submit():
         composition.release_type=form.release_type.data
         composition.title=form.title.data
@@ -190,7 +221,9 @@ def edit_composition(slug):
         db.session.commit()
         composition.generate_slug()
         flash(f'You successfully updated your composition.')
+        # Redirects to that composition's page
         return redirect(url_for('.composition', slug=composition.slug))
+    # Shows the current information as a GET request
     form.release_type.data=composition.release_type
     form.title.data=composition.title
     form.description.data=composition.description
@@ -199,6 +232,16 @@ def edit_composition(slug):
 @main.route('/delete/<slug>', methods=["GET", "POST"])
 @login_required
 def delete_composition(slug):
+    """Function will delete the composition if the user has authorization (if it's their own)
+
+    Args:
+        slug (string): Each composition has a unique slug, and it's used to yield that particular
+        composition, in this case in html format
+
+    Returns:
+        index.html file: Brings the user back to the home page once the function has been called (the composition is deleted)
+    """
+    # Search the composition based on slug to input into the function, else 404 error
     composition = Composition.query.filter_by(slug=slug).first_or_404()
     db.session.delete(composition)
     db.session.commit()
@@ -209,46 +252,84 @@ def delete_composition(slug):
 @login_required
 @permission_required(Permission.FOLLOW)
 def follow(username):
+    """This function allows you (the user) to follow another user
+
+    Args:
+        username (string): The given username of the user you would like to follow
+
+    Returns:
+        user.html: Redirects back to the user's profile of the user you follow
+    """
+    # Search the database for the user based on username
     user = User.query.filter_by(username=username).first()
+    # If not a user
     if user is None:
         flash("That is not a valid user.")
         return redirect(url_for('.index'))
+    # If already following that user
     if current_user.is_following(user):
         flash("Looks like you are already following that user.")
         return redirect(url_for('.user', username=username))
+    # Follow user
     current_user.follow(user)
     db.session.commit()
     flash(f"You are now following {username}")
+    # Redirects to the user's profile
     return redirect(url_for('.user', username=username))
 
 @main.route('/unfollow/<username>')
 @login_required
 @permission_required(Permission.FOLLOW)
 def unfollow(username):
+    """This function allows you (the user) to unfollow another user
+
+    Args:
+        username (string): The given username of the user you would like to unfollow
+
+    Returns:
+        user.html: Redirects back to the user's profile of the user you unfollow
+    """
+    # Search the database for the user based on username
     user = User.query.filter_by(username=username).first()
+    # If not a user
     if user is None:
         flash("That is not a valid user.")
         return redirect(url_for('.index'))
+    # If NOT already following that user
     if not current_user.is_following(user):
         flash("Looks like you aren't already following that user.")
         return redirect(url_for('.user', username=username))
+    # Unfollow the user
     current_user.unfollow(user)
     db.session.commit()
     flash(f"You have successfully unfollowed {username}.")
+    # Redirects to the user's profile
     return redirect(url_for('.user', username=username))
 
 @main.route('/followers/<username>')
 def followers(username):
+    """Function returns all the followers of the user provided by the username
+
+    Args:
+        username (string): The given username of the user who has the followers
+
+    Returns:
+        followers.html file: Renders a page displaying followers of the user based on the
+        username given in the function
+    """
+    # Search the database for the user based on the username
     user = User.query.filter_by(username=username).first()
+    # If user does not exist
     if user is None:
         flash("That is not a valid user.")
         return redirect(url_for('.index'))
     page = request.args.get('page', 1, type=int)
+    # Display followers in paginated list
     pagination = user.followers.paginate(
         page,
         per_page=current_app.config['RAGTIME_FOLLOWERS_PER_PAGE'],
         error_out=False)
-    # convert to only follower and timestamp
+    # Convert to only follower and timestamp
     follows = [{'user': item.follower, 'timestamp': item.timestamp}
                for item in pagination.items]
     return render_template('followers.html',
@@ -260,16 +341,27 @@ def followers(username):
 
 @main.route('/following/<username>')
 def following(username):
+    """Function returns all users who are followed by the user provided by the username
+
+    Args:
+        username (string): The given username of the user is following others
+
+    Returns:
+        following.html file: Renders a page displaying users who the given user is following
+    """
+    # Search for user in the database with the username given in the function
     user = User.query.filter_by(username=username).first()
+    # If user does not exist
     if user is None:
         flash("That is not a valid user.")
         return redirect(url_for('.index'))
     page = request.args.get('page', 1, type=int)
+    # Display paginated list of users who the given user is following
     pagination = user.following.paginate(
         page,
         per_page=current_app.config['RAGTIME_FOLLOWERS_PER_PAGE'],
         error_out=False)
-    # convert to only follower and timestamp
+    # Convert to only follower and timestamp
     follows = [{'user': item.following, 'timestamp': item.timestamp}
                for item in pagination.items]
     return render_template('following.html',
