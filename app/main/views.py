@@ -1,17 +1,22 @@
-from flask import session, render_template, url_for, flash, redirect, request, current_app, make_response
+from flask import render_template, url_for, flash, redirect, request, current_app, make_response
 from flask_login import login_required, current_user
-
-from app.auth.views import login
 from . import main
-from .forms import NameForm, EditProfileForm, AdminLevelEditProfileForm, CompositionForm
+from .forms import EditProfileForm, AdminLevelEditProfileForm, CompositionForm
 from .. import db
-from ..models import Role, User, Permission, load_user, Composition
+from ..models import Role, User, Permission, Composition
 from ..decorators import admin_required, permission_required
 
 
 @main.route('/', methods=["GET", "POST"])
 def index():
+    """Index or home page.
+
+    Returns:
+        html file: Returns index.html from the templates directory
+    """
+    # Renders the composition form on the home page to submit compositions
     form = CompositionForm()
+    # Create compositions
     if current_user.can(Permission.PUBLISH) \
             and form.validate_on_submit():
         composition = Composition(
@@ -23,8 +28,10 @@ def index():
         db.session.commit()
         composition.generate_slug()
         return redirect(url_for('.index'))
+    # Will not allow compositions to be created if user is anonymous and the form is submitted
     elif current_user.is_anonymous and form.validate_on_submit():
         flash('You must be logged in to do that.')
+    # Defines which compositions to show on home page
     page = request.args.get('page', 1, type=int)
     show_followed = False
     if current_user.is_authenticated:
@@ -33,16 +40,24 @@ def index():
         query = current_user.followed_compositions
     else:
         query = Composition.query
+    # Paginate the query from above to show 20 per 1 page
     pagination = query.order_by(Composition.timestamp.desc()).paginate(
             page,
             per_page=current_app.config['RAGTIME_COMPS_PER_PAGE'],
             error_out=False)
+    # Convert to list
     compositions = pagination.items
     return render_template('index.html', form=form, compositions=compositions, pagination=pagination, show_followed=show_followed)
 
 @main.route('/all')
 @login_required
 def show_all():
+    """On the home/index page, enables users to view all compositions
+    created in a paginated list. Must be logged in.
+
+    Returns:
+        Response: Response is the home page or index.html file which renders the compositions
+    """
     resp = make_response(redirect(url_for('.index')))
     resp.set_cookie('show_followed', '', max_age=30*24*60*60) # 30 days
     return resp
@@ -50,6 +65,12 @@ def show_all():
 @main.route('/followed')
 @login_required
 def show_followed():
+    """On the home/index page, enables users to view all compositions
+    of those who the user follows. Must be logged in.
+
+    Returns:
+        Response: Response is the home page or index.html file which renders the compositions
+    """
     resp = make_response(redirect(url_for('.index')))
     resp.set_cookie('show_followed', '1', max_age=30*24*60*60) # 30 days
     return resp
@@ -58,29 +79,58 @@ def show_followed():
 @login_required
 @admin_required
 def for_admins_only():
+    """For administrators only. If you are an administrator, you can see this page
+
+    Returns:
+        String: On the page, will return "Welcome, administrator!"
+    """
     return "Welcome, administrator!"
 
 @main.route('/moderate')
 @login_required
 @permission_required(Permission.MODERATE)
 def for_moderators_only():
+    """""For moderators only. If you are an moderator, you can see this page
+
+    Returns:
+        String: On the page, will return "Greetings, moderator!"
+    """
     return "Greetings, moderator!"
 
 @main.route('/user/<username>')
 def user(username):
+    """The profile page of the given user is shown
+
+    Args:
+        username (string): The user's username is provided in the function to view the user's profile
+
+    Returns:
+        user.html file: Shows the page that is the user's profile
+    """
+    # Search for user based on the one provided in the URL, otherwise 404 error rendered
     user = User.query.filter_by(username=username).first_or_404()
     page = request.args.get('page', 1, type=int)
+    # Pagination of the compositions for the particular user
     pagination = Composition.query.filter_by(artist=user).order_by(Composition.timestamp.desc()).paginate(
             page,
             per_page=current_app.config['RAGTIME_COMPS_PER_PAGE'],
             error_out=False)
+    # Convert to list
     compositions = pagination.items
     return render_template('user.html', user=user, compositions=compositions, pagination=pagination)
 
 @main.route('/edit-profile', methods=["GET", "POST"])
 @login_required
 def edit_profile():
+    """The edit profile function renders the page where the user can edit their profile--only
+    their own profile
+
+    Returns:
+        edit_profile.html file: The page where one can edit their profile
+    """
+    # Renders EditProfileForm on the page
     form = EditProfileForm()
+    # If form is validated, it will be updated and saved in the database
     if form.validate_on_submit():
         current_user.name = form.name.data
         current_user.location = form.location.data
