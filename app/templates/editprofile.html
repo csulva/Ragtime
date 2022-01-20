@@ -3,5 +3,7 @@
 
 {% block content %}
 {{super()}}
+<div class="form-header">
 {{ wtf.quick_form(form) }}
+</div>
 {% endblock content %}
