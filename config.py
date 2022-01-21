@@ -31,16 +31,19 @@ class Config:
     def init_app(app):
         pass
 
+# Development Configuration
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_DEV_URL') or \
         f'sqlite:///{os.path.join(basedir, "data-dev.sqlite")}'
 
+# Testing Configuration
 class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_TEST_URL') or \
         f'sqlite:///{os.path.join(basedir, "data-test.sqlite")}'
 
+# Production Configuration
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         f'sqlite:///{os.path.join(basedir, "data.sqlite")}'
@@ -70,7 +73,7 @@ class ProductionConfig(Config):
         mail_handler.setLevel(logging.ERROR)
         app.logger.addHandler(mail_handler)
 
-# For deploying to Heroku in production. FLASK_CONFIG should be 'heroku'.
+# Heroku Configuration for deploying to Heroku in production. FLASK_CONFIG should be 'heroku'.
 class HerokuConfig(ProductionConfig):
     HTTPS_REDIRECT = True if os.environ.get('DYNO') else False
 
