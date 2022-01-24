@@ -1,8 +1,7 @@
 from app import create_app, db
 from app.models import Composition, Role, User, Follow
 import os
-from flask_migrate import Migrate
-from flask_migrate import upgrade
+from flask_migrate import Migrate, upgrade
 
 # Create app from FLASK_CONFIG environment variable config or default config
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
