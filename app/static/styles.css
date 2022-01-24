@@ -47,6 +47,7 @@ ul.compositions li.composition:hover {
 }
 div.composition-date {
     float: right;
+    display: inherit;
 }
 div.composition-artist {
     font-weight: normal;
