@@ -8,7 +8,7 @@
             </a>
         </div>
         <div class="composition-content">
-            <div class="composition-date">{{ moment(composition.timestamp).format('LL') }}</div>
+            <div class="composition-date">{{ composition.timestamp.strftime('%B %d, %Y') }}</div>
             <div class="composition-artist">
                 <a href="{{ url_for('main.user', username=composition.artist.username) }}">
                     {{ composition.artist.username }}

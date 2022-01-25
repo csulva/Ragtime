@@ -49,7 +49,7 @@
         </tr>
         <tr>
         <th scope="row">Last seen</th>
-        <td>{{ moment(user.last_seen).format('LL') }}</td>
+        <td>{{user.last_seen.strftime('%B %d, %Y')}}</td>
         </tr>
         </tbody>
     </table>
