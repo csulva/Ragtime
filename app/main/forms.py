@@ -6,7 +6,7 @@ from wtforms.fields.core import BooleanField, SelectField
 from wtforms.validators import DataRequired, Length
 from app.models import ReleaseType
 
-# Edit profile form, asks user name, location, bio, with submit button
+# Edit profile form, asks user's name, location, bio, with submit button
 class EditProfileForm(FlaskForm):
     name = StringField("Name", validators=[Length(0, 64)])
     location = StringField("Location", validators=[Length(0, 64)])
