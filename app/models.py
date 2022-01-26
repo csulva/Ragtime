@@ -162,8 +162,10 @@ class User(UserMixin, db.Model):
                 lazy='dynamic',
                 cascade='all, delete-orphan')
 
-    # Creates user role automatically upon registration of new user
     def __init__(self, **kwargs):
+        """Creates user role automatically upon registration of new user. Users set to follow themselves
+        upon registration as well.
+        """
         super().__init__(**kwargs)
         if self.role is None:
             if self.username == current_app.config['RAGTIME_ADMIN']:
