@@ -11,10 +11,11 @@ from flask_wtf.csrf import CSRFProtect
 bootstrap = Bootstrap()
 db = SQLAlchemy()
 login_manager = LoginManager()
-login_manager.login_view = 'auth.login'
 mail = Mail()
 moment = Moment()
 csrf = CSRFProtect()
+
+login_manager.login_view = 'auth.login'
 
 # App factory
 def create_app(config_name='default'):
