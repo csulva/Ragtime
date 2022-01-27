@@ -50,7 +50,7 @@ class RegistrationForm(FlaskForm):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('Username already exists.')
 
-# Change email, requires old email
+# Change email form, requires old email
 class ChangeEmail(FlaskForm):
     old_email = StringField("Old Email", validators=[DataRequired(), Email()])
     email = StringField("New Email", validators=[DataRequired(), Email()])
@@ -60,7 +60,7 @@ class ChangeEmail(FlaskForm):
         """Checks to see if the new email given exists or not, in order to change it
 
         Args:
-            field ([type]): The field is what is entered in the form, in this case, an email
+            field (string): The field is what is entered in the form, in this case, an email
             to check if it exists already or not.
 
         Raises:
@@ -69,7 +69,7 @@ class ChangeEmail(FlaskForm):
         if User.query.filter_by(email=field.data).first():
             raise ValidationError('Email already registered by another user.')
 
-# Change password, requires old password to match
+# Change password form, requires old password to match
 class ChangePassword(FlaskForm):
     password = PasswordField("Old Password", validators=[DataRequired()])
     new_password = PasswordField('Password', validators=[DataRequired(), EqualTo('new_password_confirm', message='Passwords do not match.'
