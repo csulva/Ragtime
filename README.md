@@ -56,11 +56,6 @@ u = User(email=fake.email(),
 # See app/fake.py
 ```
 
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
-
 ## Migrations
 Whenever a database migration needs to be made. Run the following commands
 ```bash
@@ -73,6 +68,11 @@ flask db upgrade
 To apply the migration.
 
 For a full migration command reference, run flask db --help.
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
 
 ## References
 [CodingNomads Python Web Development](https://codingnomads.co/career-track/professional-python-web-development-course)
