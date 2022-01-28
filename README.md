@@ -9,9 +9,7 @@ For Production:
 pip install requirements.txt
 ```
 For Development (includes Faker):
-```bash
-pip install requirements/dev.txt
-```
+See [Development Setup](https://github.com/csulva/Ragtime/blob/main/Dev-Setup-with-Faker.md)
 
 ## Usage
 
@@ -26,34 +24,6 @@ foobar.pluralize('goose')
 
 # returns 'phenomenon'
 foobar.singularize('phenomena')
-```
-## Usage in Development
-```python
-from fake import Faker
-fake = Faker()
-
-# Fake users
-u = User(email=fake.email(),
-            username=fake.user_name(),
-            password='password',
-            confirmed=True,
-            name=fake.name(),
-            location=fake.city(),
-            bio=fake.text(),
-            last_seen=fake.past_date())
-        db.session.add(u)
-        db.session.commit()
-        
-# Fake compositions
-        c = Composition(release_type=randint(0,2),
-                        title=string.capwords(fake.bs()),
-                        description=fake.text(),
-                        timestamp=fake.past_date(),
-                        artist=u)
-        db.session.add(c)
-        db.session.commit()
-
-# See app/fake.py
 ```
 
 ## Migrations
