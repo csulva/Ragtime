@@ -31,6 +31,7 @@ foobar.singularize('phenomena')
 ```python
 from fake import Faker
 fake = Faker()
+
 # Fake users
 u = User(email=fake.email(),
             username=fake.user_name(),
@@ -42,6 +43,7 @@ u = User(email=fake.email(),
             last_seen=fake.past_date())
         db.session.add(u)
         db.session.commit()
+        
 # Fake compositions
         c = Composition(release_type=randint(0,2),
                         title=string.capwords(fake.bs()),
