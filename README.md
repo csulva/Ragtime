@@ -66,7 +66,7 @@ Whenever a database migration needs to be made. Run the following commands
 ```bash
 flask db migrate
 ```
-This will generate a new migration script. Then run
+This will generate a new migration script. Then run:
 ```bash
 flask db upgrade
 ```
