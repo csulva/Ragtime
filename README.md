@@ -6,7 +6,7 @@ Ragtime is a social app created with Flask for users to post new "music" as a co
 It is  recommended to install requirements in a virtual environment (venv).
 ```bash
 python3 -m venv venv
-. venv/bin/activate  # [.csh|.fish]
+. venv/bin/activate
 ```
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install Ragtime requirements.
 
