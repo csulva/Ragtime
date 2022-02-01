@@ -21,10 +21,31 @@ For Development (includes Faker):
 See [Development Setup](https://github.com/csulva/Ragtime/blob/main/Dev-Setup-with-Faker.md)
 
 ## Usage
+To start using the app, open a ```flask shell``` session
+```python
+export FLASK_APP=ragtime
+flask shell
+```
+```python
+>>> db.create_all()
+>>> Role.insert_roles()
+>>> exit()
+```
+
+Add yourself to the database in a flask shell session:
+```python
+>>> u = User(username='yourusername', email='youremail', password='yourpassword', confirmed=True)
+>>> db.session.add(u)
+>>> db.session.commit()
+>>> exit()
+```
+Note: you can also register in your own app!
+First, run the program:
 
 ```python
 flask run
 ```
+Then, navigate to your register template: [localhost:5000/auth/register](#) and register your email address. Confirm yourself as a user by opening the link sent to you in an email (see [Send Emails](#send-emails))
 
 ## Migrations
 Whenever a database migration needs to be made. Run the following commands
