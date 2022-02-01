@@ -23,16 +23,7 @@ See [Development Setup](https://github.com/csulva/Ragtime/blob/main/Dev-Setup-wi
 ## Usage
 
 ```python
-import foobar
-
-# returns 'words'
-foobar.pluralize('word')
-
-# returns 'geese'
-foobar.pluralize('goose')
-
-# returns 'phenomenon'
-foobar.singularize('phenomena')
+flask run
 ```
 
 ## Migrations
