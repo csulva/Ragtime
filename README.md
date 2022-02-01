@@ -1,6 +1,9 @@
 # Ragtime
 
-Ragtime is a social app created with Flask for users to post new "music" as a composition. Register an account and start sharing your compositions on the blog or follow other users to see their work!
+[Ragtime](https://flask-webdev-cs.herokuapp.com/) is a social app created with Flask for users to post new "music" as a composition. Register an account and start sharing your compositions on the blog or follow other users to see their work!
+
+[Join the community](https://flask-webdev-cs.herokuapp.com/) by creating an account and sharing your compositions!
+
 ## Installation
 
 It is  recommended to install requirements in a virtual environment (venv).
