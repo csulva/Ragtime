@@ -12,7 +12,7 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install Ragtime
 
 For Production:
 ```bash
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 For Development (includes Faker):
 See [Development Setup](https://github.com/csulva/Ragtime/blob/main/Dev-Setup-with-Faker.md)
