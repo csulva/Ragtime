@@ -39,6 +39,38 @@ To apply the migration.
 
 For a full migration command reference, run flask db --help.
 
+## Send Emails
+
+For email sending to work properly with this app, including confirmation emails, you must have an email that accepts SMTP authentication. Then, you must then set the environment variables MAIL_USERNAME, MAIL_PASSWORD, and RAGTIME_ADMIN that are found in ```config.py```
+
+You can configure those variables in a bash script:
+
+```python
+export MAIL_USERNAME=<your_username>
+export MAIL_PASSWORD=<your_password>
+export RAGTIME_ADMIN=<yourusername@example.com>
+```
+
+## Environment Variables
+
+It might be useful to save your environment variables in your project, so you do not need to set them up each time you run the app. To do so, run the following:
+
+```python
+touch .env
+```
+Be sure to create it in your root directory and not to push it to GitHub or any public space where it can be viewed. Then you can add your environment variables to the file. For example:
+```python
+# .env
+FLASK_APP=ragtime.py
+```
+
+For deployment to Heroku, you must add the environment variables to your app. [You can do this in your Heroku dashboard](https://devcenter.heroku.com/articles/config-vars) when the app is created. Or apply them in your terminal:
+```python
+heroku config:set FLASK_APP=ragtime.py
+```
+
+
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
