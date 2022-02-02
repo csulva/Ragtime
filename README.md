@@ -45,7 +45,9 @@ First, run the program:
 ```python
 flask run
 ```
-Then, navigate to your register template: [localhost:5000/auth/register](#) and register your email address. Confirm yourself as a user by opening the link sent to you in an email (see [Send Emails](#send-emails))
+Then, navigate to your register template: __localhost:5000/auth/register__ and register your email address. Confirm yourself as a user by opening the link sent to you in an email (see [Send Emails](#send-emails)).
+
+Now you can create your own compositions!
 
 ## Migrations
 Whenever a database migration needs to be made. Run the following commands
@@ -58,7 +60,7 @@ flask db upgrade
 ```
 To apply the migration.
 
-For a full migration command reference, run flask db --help.
+For a full migration command reference, run ```flask db --help```.
 
 ## Send Emails
 
