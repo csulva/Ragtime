@@ -49,6 +49,22 @@ Then, navigate to your register template: __localhost:5000/auth/register__ and r
 
 Now you can create your own compositions!
 
+## Fake Data
+Fake data with your app in development to see new users and their compositions on your website and in your database.
+
+To do so, ```pip install requirements/dev.txt``` in your virtual environment.
+
+Next, open a Flask shell session:
+```python
+flask shell
+```
+# use however many users or compositions you want to generate
+>>> from app import fake
+>>> fake.users(count=20)
+>>> fake.compositions(count=200)
+
+The data will automatially be committed to your development database. Be sure not transfer your development work and data to production so the information on your app is real 🙂
+
 ## Migrations
 Whenever a database migration needs to be made. Run the following commands
 ```bash
