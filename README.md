@@ -26,6 +26,7 @@ flask shell
 ```python
 >>> db.create_all()
 >>> Role.insert_roles()
+>>> User.add_self_follows()
 >>> exit()
 ```
 
