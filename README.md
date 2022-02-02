@@ -13,15 +13,12 @@ python3 -m venv venv
 ```
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install Ragtime requirements.
 
-For Production:
 ```bash
 pip install -r requirements.txt
 ```
-For Development (includes Faker):
-See [Development Setup](https://github.com/csulva/Ragtime/blob/main/Dev-Setup-with-Faker.md)
 
 ## Usage
-To start using the app, open a ```flask shell``` session
+To start using the app, open a ```flask shell``` session:
 ```python
 export FLASK_APP=ragtime
 flask shell
@@ -45,7 +42,7 @@ First, run the program:
 ```python
 flask run
 ```
-Then, navigate to your register template: __localhost:5000/auth/register__ and register your email address. Confirm yourself as a user by opening the link sent to you in an email (see [Send Emails](#send-emails)).
+Then, navigate to your *register* template: __localhost:5000/auth/register__ and register your email address. Confirm yourself as a user by opening the link sent to you in an email (see [Send Emails](#send-emails)).
 
 Now you can create your own compositions!
 
@@ -58,12 +55,14 @@ Next, open a Flask shell session:
 ```python
 flask shell
 ```
+```python
 # use however many users or compositions you want to generate
 >>> from app import fake
 >>> fake.users(count=20)
 >>> fake.compositions(count=200)
+```
 
-The data will automatially be committed to your development database. Be sure not transfer your development work and data to production so the information on your app is real 🙂
+The data will automatially be committed to your database in development. Be sure not transfer this data to production so that the information you show to the world on your app is real 🙂
 
 ## Migrations
 Whenever a database migration needs to be made. Run the following commands
@@ -107,8 +106,6 @@ For deployment to Heroku, you must add the environment variables to your app. [Y
 ```python
 heroku config:set FLASK_APP=ragtime.py
 ```
-
-
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
