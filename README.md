@@ -17,7 +17,7 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install Ragtime
 pip install -r requirements.txt
 ```
 
-## Usage
+## Us
 To start using the app, open a ```flask shell``` session:
 ```python
 export FLASK_APP=ragtime
